@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DCL Transparency Board</title>
+<style>
+  :root {
+    --bg: #0e1117; --panel: #161b22; --border: #262c36;
+    --text: #e6edf3; --muted: #8b949e;
+    --accent: #00ffa3; --warn: #ffc107; --danger: #ff4d5e;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+    font-family: -apple-system, "Segoe UI", Roboto, sans-serif; padding: 32px 24px 64px; }
+  h1 { margin: 0 0 4px; font-size: 22px; }
+  h2 { font-size: 14px; margin: 0 0 14px; color: var(--muted); font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.04em; }
+  .sub { color: var(--muted); font-size: 13px; margin-bottom: 28px; }
+  .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px; margin-bottom: 28px; }
+  .kpi { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; }
+  .kpi .label { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .kpi .value { font-size: 26px; font-weight: 600; color: var(--accent); margin-top: 6px; }
+  .services-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px; margin-bottom: 28px; }
+  .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 18px; }
+  .service-stat { font-size: 13px; color: var(--muted); margin: 3px 0; }
+  .service-stat b { color: var(--text); }
+  .placeholder { color: var(--muted); font-size: 13px; line-height: 1.5; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--border); }
+  th { color: var(--muted); font-weight: 500; }
+  .verdict-COMMIT { color: var(--accent); }
+  .verdict-NO_COMMIT { color: var(--danger); }
+  .badge { display: inline-block; padding: 1px 7px; border-radius: 999px; font-size: 11px;
+    background: #21262d; color: var(--muted); }
+  footer { margin-top: 32px; color: var(--muted); font-size: 12px; }
+</style>
+</head>
+<body>
+
+<h1>🛡️ DCL Transparency Board</h1>
+<div class="sub" id="generated-at">Loading…</div>
+
+<div class="kpi-row">
+  <div class="kpi"><div class="label">Total Audits</div><div class="value" id="kpi-audits">–</div></div>
+  <div class="kpi"><div class="label">USDC Protected</div><div class="value" id="kpi-usdc">–</div></div>
+</div>
+
+<div class="services-row" id="services"></div>
+
+<div class="panel">
+  <h2>Live Audit Stream (all services)</h2>
+  <div id="feed"></div>
+</div>
+
+<footer>DCL Trust Oracle — data refreshes on each export cycle. Not real-time.</footer>
+
+<script>
+async function loadMetrics() {
+  const res = await fetch('./metrics.json', { cache: 'no-store' });
+  if (!res.ok) throw new Error('metrics.json not found');
+  return res.json();
+}
+
+function fmtUsdc(n) {
+  return '$' + Number(n).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function renderServiceCard(name, label, data) {
+  if (!data || !data.available) {
+    return `
+      <div class="panel">
+        <h2>${label}</h2>
+        <div class="placeholder">${(data && data.note) || 'No data yet.'}</div>
+      </div>`;
+  }
+  if (name === 'sentinel') {
+    return `
+      <div class="panel">
+        <h2>${label}</h2>
+        <div class="service-stat">Events: <b>${data.total_events}</b></div>
+        <div class="service-stat">COMMIT / NO_COMMIT: <b>${data.commit_count}</b> / <b>${data.no_commit_count}</b></div>
+        <div class="service-stat">USDC collected: <b>${fmtUsdc(data.usdc_collected)}</b></div>
+      </div>`;
+  }
+  return `
+    <div class="panel">
+      <h2>${label}</h2>
+      <div class="service-stat">Audits: <b>${data.total_audits}</b></div>
+      <div class="service-stat">COMMIT / NO_COMMIT: <b>${data.commit_count}</b> / <b>${data.no_commit_count}</b></div>
+      <div class="service-stat">Unique agents: <b>${data.unique_agents}</b></div>
+      <div class="service-stat">USDC protected: <b>${fmtUsdc(data.usdc_protected)}</b></div>
+    </div>`;
+}
+
+function renderFeed(events) {
+  const el = document.getElementById('feed');
+  if (!events || events.length === 0) {
+    el.innerHTML = '<div class="placeholder">No events yet.</div>';
+    return;
+  }
+  const rows = events.map(e => `
+    <tr>
+      <td>${e.timestamp}</td>
+      <td><span class="badge">${e.service}</span></td>
+      <td>${e.agent_id ?? '—'}</td>
+      <td class="verdict-${e.verdict}">${e.verdict}</td>
+      <td>${e.task_type ?? e.scan_type ?? '—'}</td>
+      <td>${e.amount_usdc != null ? fmtUsdc(e.amount_usdc) : '—'}</td>
+    </tr>`).join('');
+  el.innerHTML = `
+    <table>
+      <thead><tr><th>Time (UTC)</th><th>Service</th><th>Agent</th><th>Verdict</th><th>Type</th><th>Amount</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+loadMetrics().then(data => {
+  document.getElementById('generated-at').textContent =
+    'Last updated: ' + new Date(data.generated_at).toUTCString();
+  document.getElementById('kpi-audits').textContent = data.total_audits;
+  document.getElementById('kpi-usdc').textContent = fmtUsdc(data.total_usdc_protected);
+
+  document.getElementById('services').innerHTML =
+    renderServiceCard('webhook', 'Trust Oracle (webhook)', data.services.webhook) +
+    renderServiceCard('bazaar', 'Bazaar (x402 v2)', data.services.bazaar) +
+    renderServiceCard('sentinel', 'Update Sentinel', data.services.sentinel) +
+    renderServiceCard('identity_guard', 'Identity Guard (TRON)', data.services.identity_guard);
+
+  renderFeed(data.recent_events);
+}).catch(err => {
+  document.getElementById('generated-at').textContent = 'metrics.json not found yet — waiting for first export.';
+  console.error(err);
+});
+</script>
+
+</body>
+</html>
