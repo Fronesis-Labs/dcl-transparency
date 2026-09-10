@@ -1,0 +1,138 @@
+{
+  "generated_at": "2026-09-10T09:58:35+00:00",
+  "total_audits": 51,
+  "total_usdc_protected": 0.11,
+  "recent_events": [
+    {
+      "service": "bazaar",
+      "timestamp": "2026-09-10 08:43:21",
+      "agent_id": "bazaar-payment-probe",
+      "task_type": "quality",
+      "verdict": "COMMIT",
+      "route": "/evaluate/quality",
+      "amount_usdc": 0.03
+    },
+    {
+      "service": "bazaar",
+      "timestamp": "2026-09-10 08:43:20",
+      "agent_id": "bazaar-payment-probe",
+      "task_type": "safety",
+      "verdict": "NO_COMMIT",
+      "route": "/evaluate/safety",
+      "amount_usdc": 0.01
+    },
+    {
+      "service": "bazaar",
+      "timestamp": "2026-09-10 08:43:19",
+      "agent_id": "bazaar-payment-probe",
+      "task_type": "jailbreak",
+      "verdict": "COMMIT",
+      "route": "/evaluate/jailbreak",
+      "amount_usdc": 0.02
+    },
+    {
+      "service": "bazaar",
+      "timestamp": "2026-09-10 08:43:18",
+      "agent_id": "bazaar-payment-probe",
+      "task_type": "strict",
+      "verdict": "COMMIT",
+      "route": "/evaluate/strict",
+      "amount_usdc": 0.05
+    },
+    {
+      "service": "bazaar",
+      "timestamp": "2026-09-10 08:30:13",
+      "agent_id": "bazaar-payment-probe",
+      "task_type": "fast",
+      "verdict": "COMMIT",
+      "route": "/evaluate/fast",
+      "amount_usdc": 0.01
+    }
+  ],
+  "services": {
+    "webhook": {
+      "available": true,
+      "total_audits": 12,
+      "commit_count": 8,
+      "no_commit_count": 4,
+      "unique_agents": 7,
+      "usdc_protected": 0,
+      "network_distribution": [],
+      "recent_events": []
+    },
+    "bazaar": {
+      "available": true,
+      "total_audits": 39,
+      "commit_count": 33,
+      "no_commit_count": 6,
+      "unique_agents": 1,
+      "usdc_protected": 0.11,
+      "network_distribution": [
+        {
+          "network": "eip155:8453",
+          "count": 5
+        }
+      ],
+      "recent_events": [
+        {
+          "service": "bazaar",
+          "timestamp": "2026-09-10 08:43:21",
+          "agent_id": "bazaar-payment-probe",
+          "task_type": "quality",
+          "verdict": "COMMIT",
+          "route": "/evaluate/quality",
+          "amount_usdc": 0.03
+        },
+        {
+          "service": "bazaar",
+          "timestamp": "2026-09-10 08:43:20",
+          "agent_id": "bazaar-payment-probe",
+          "task_type": "safety",
+          "verdict": "NO_COMMIT",
+          "route": "/evaluate/safety",
+          "amount_usdc": 0.01
+        },
+        {
+          "service": "bazaar",
+          "timestamp": "2026-09-10 08:43:19",
+          "agent_id": "bazaar-payment-probe",
+          "task_type": "jailbreak",
+          "verdict": "COMMIT",
+          "route": "/evaluate/jailbreak",
+          "amount_usdc": 0.02
+        },
+        {
+          "service": "bazaar",
+          "timestamp": "2026-09-10 08:43:18",
+          "agent_id": "bazaar-payment-probe",
+          "task_type": "strict",
+          "verdict": "COMMIT",
+          "route": "/evaluate/strict",
+          "amount_usdc": 0.05
+        },
+        {
+          "service": "bazaar",
+          "timestamp": "2026-09-10 08:30:13",
+          "agent_id": "bazaar-payment-probe",
+          "task_type": "fast",
+          "verdict": "COMMIT",
+          "route": "/evaluate/fast",
+          "amount_usdc": 0.01
+        }
+      ]
+    },
+    "sentinel": {
+      "available": true,
+      "total_events": 0,
+      "commit_count": 0,
+      "no_commit_count": 0,
+      "usdc_collected": 0,
+      "recent_events": []
+    },
+    "identity_guard": {
+      "available": false,
+      "status": "no_live_traffic",
+      "note": "x402-identity-guard is currently a library with no deployed instance producing traffic — this section will populate once a reference/demo deployment exists."
+    }
+  }
+}
