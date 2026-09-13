@@ -1,8 +1,17 @@
 {
-  "generated_at": "2026-09-13T12:30:01+00:00",
-  "total_audits": 53,
-  "total_usdc_protected": 0.14,
+  "generated_at": "2026-09-13T12:45:01+00:00",
+  "total_audits": 54,
+  "total_usdc_protected": 0.16,
   "recent_events": [
+    {
+      "service": "bazaar",
+      "timestamp": "2026-09-13 12:30:31",
+      "agent_id": "codex",
+      "task_type": "jailbreak",
+      "verdict": "COMMIT",
+      "route": "/evaluate/jailbreak",
+      "amount_usdc": 0.02
+    },
     {
       "service": "bazaar",
       "timestamp": "2026-09-13 11:49:48",
@@ -95,18 +104,27 @@
     },
     "bazaar": {
       "available": true,
-      "total_audits": 40,
-      "commit_count": 34,
+      "total_audits": 41,
+      "commit_count": 35,
       "no_commit_count": 6,
-      "unique_agents": 2,
-      "usdc_protected": 0.13,
+      "unique_agents": 3,
+      "usdc_protected": 0.15,
       "network_distribution": [
         {
           "network": "eip155:8453",
-          "count": 6
+          "count": 7
         }
       ],
       "recent_events": [
+        {
+          "service": "bazaar",
+          "timestamp": "2026-09-13 12:30:31",
+          "agent_id": "codex",
+          "task_type": "jailbreak",
+          "verdict": "COMMIT",
+          "route": "/evaluate/jailbreak",
+          "amount_usdc": 0.02
+        },
         {
           "service": "bazaar",
           "timestamp": "2026-09-13 11:49:48",
