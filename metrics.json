@@ -1,8 +1,17 @@
 {
-  "generated_at": "2026-09-14T19:45:01+00:00",
-  "total_audits": 54,
-  "total_usdc_protected": 0.16,
+  "generated_at": "2026-09-14T20:00:01+00:00",
+  "total_audits": 55,
+  "total_usdc_protected": 0.17,
   "recent_events": [
+    {
+      "service": "bazaar",
+      "timestamp": "2026-09-14 19:51:43",
+      "agent_id": "agent-123",
+      "task_type": "fast",
+      "verdict": "COMMIT",
+      "route": "/evaluate/fast",
+      "amount_usdc": 0.01
+    },
     {
       "service": "bazaar",
       "timestamp": "2026-09-13 12:30:31",
@@ -104,18 +113,27 @@
     },
     "bazaar": {
       "available": true,
-      "total_audits": 41,
-      "commit_count": 35,
+      "total_audits": 42,
+      "commit_count": 36,
       "no_commit_count": 6,
       "unique_agents": 3,
-      "usdc_protected": 0.15,
+      "usdc_protected": 0.16,
       "network_distribution": [
         {
           "network": "eip155:8453",
-          "count": 7
+          "count": 8
         }
       ],
       "recent_events": [
+        {
+          "service": "bazaar",
+          "timestamp": "2026-09-14 19:51:43",
+          "agent_id": "agent-123",
+          "task_type": "fast",
+          "verdict": "COMMIT",
+          "route": "/evaluate/fast",
+          "amount_usdc": 0.01
+        },
         {
           "service": "bazaar",
           "timestamp": "2026-09-13 12:30:31",
