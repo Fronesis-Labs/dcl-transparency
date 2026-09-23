@@ -1,8 +1,17 @@
 {
-  "generated_at": "2026-09-23T11:45:01+00:00",
-  "total_audits": 59,
+  "generated_at": "2026-09-23T12:00:01+00:00",
+  "total_audits": 60,
   "total_usdc_protected": 0.2,
   "recent_events": [
+    {
+      "service": "bazaar",
+      "timestamp": "2026-09-23 11:46:42",
+      "agent_id": "bazaar-payment-probe",
+      "task_type": "fast",
+      "verdict": "NO_COMMIT",
+      "route": "/evaluate/fast",
+      "amount_usdc": 0.01
+    },
     {
       "service": "bazaar",
       "timestamp": "2026-09-23 08:20:30",
@@ -149,18 +158,27 @@
     },
     "bazaar": {
       "available": true,
-      "total_audits": 46,
+      "total_audits": 47,
       "commit_count": 39,
-      "no_commit_count": 7,
+      "no_commit_count": 8,
       "unique_agents": 3,
       "usdc_protected": 0.19,
       "network_distribution": [
         {
           "network": "eip155:8453",
-          "count": 12
+          "count": 13
         }
       ],
       "recent_events": [
+        {
+          "service": "bazaar",
+          "timestamp": "2026-09-23 11:46:42",
+          "agent_id": "bazaar-payment-probe",
+          "task_type": "fast",
+          "verdict": "NO_COMMIT",
+          "route": "/evaluate/fast",
+          "amount_usdc": 0.01
+        },
         {
           "service": "bazaar",
           "timestamp": "2026-09-23 08:20:30",
@@ -287,8 +305,28 @@
   },
   "canonical_audit_events": {
     "available": true,
-    "total": 1,
+    "total": 2,
     "events": [
+      {
+        "schema_version": "1.0",
+        "event_id": "evt_467be5025a61407fa8014e2b25221124",
+        "event_type": "dcl.audit.evaluated",
+        "timestamp": "2026-09-23T11:46:42.019+00:00",
+        "service": "dcl-trust-oracle",
+        "producer": "bazaar",
+        "route": "/evaluate/fast",
+        "agent_id": "bazaar-payment-probe",
+        "identity_source": "caller_supplied",
+        "identity_confidence": "unverified",
+        "trace_id": "tr_92fc4c885f3b4497941d1c7dc2e2d727",
+        "task_type": "fast",
+        "policy_id": "default",
+        "policy_version": "1.0.0",
+        "verdict": "NO_COMMIT",
+        "proof": {
+          "tx_hash": "0xa5462d24345a85462632d440629e1bb02031d1a78c7f83cda2c44808e9d7066e"
+        }
+      },
       {
         "schema_version": "1.0",
         "event_id": "evt_3019c4f046264364b65eff62b32c3a58",
