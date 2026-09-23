@@ -1,8 +1,17 @@
 {
-  "generated_at": "2026-09-23T13:30:01+00:00",
-  "total_audits": 60,
-  "total_usdc_protected": 0.2,
+  "generated_at": "2026-09-23T13:45:01+00:00",
+  "total_audits": 61,
+  "total_usdc_protected": 0.21,
   "recent_events": [
+    {
+      "service": "bazaar",
+      "timestamp": "2026-09-23 13:35:10",
+      "agent_id": "dcl-langchain",
+      "task_type": "fast",
+      "verdict": "COMMIT",
+      "route": "/evaluate/fast",
+      "amount_usdc": 0.01
+    },
     {
       "service": "bazaar",
       "timestamp": "2026-09-23 11:46:42",
@@ -158,18 +167,27 @@
     },
     "bazaar": {
       "available": true,
-      "total_audits": 47,
-      "commit_count": 39,
+      "total_audits": 48,
+      "commit_count": 40,
       "no_commit_count": 8,
-      "unique_agents": 3,
-      "usdc_protected": 0.19,
+      "unique_agents": 4,
+      "usdc_protected": 0.2,
       "network_distribution": [
         {
           "network": "eip155:8453",
-          "count": 13
+          "count": 14
         }
       ],
       "recent_events": [
+        {
+          "service": "bazaar",
+          "timestamp": "2026-09-23 13:35:10",
+          "agent_id": "dcl-langchain",
+          "task_type": "fast",
+          "verdict": "COMMIT",
+          "route": "/evaluate/fast",
+          "amount_usdc": 0.01
+        },
         {
           "service": "bazaar",
           "timestamp": "2026-09-23 11:46:42",
@@ -305,8 +323,28 @@
   },
   "canonical_audit_events": {
     "available": true,
-    "total": 2,
+    "total": 3,
     "events": [
+      {
+        "schema_version": "1.0",
+        "event_id": "evt_3e910e9de0e84b55be539243a7514c91",
+        "event_type": "dcl.audit.evaluated",
+        "timestamp": "2026-09-23T13:35:10.456+00:00",
+        "service": "dcl-trust-oracle",
+        "producer": "bazaar",
+        "route": "/evaluate/fast",
+        "agent_id": "dcl-langchain",
+        "identity_source": "caller_supplied",
+        "identity_confidence": "unverified",
+        "trace_id": "tr_d44dfdb3e8ec4323a58ddbaf7d342fa7",
+        "task_type": "fast",
+        "policy_id": "default",
+        "policy_version": "1.0.0",
+        "verdict": "COMMIT",
+        "proof": {
+          "tx_hash": "0x7d40f943e2d4b95f1434cbadf8e57d3b34605cc65ab674b0b92d851d98c97fab"
+        }
+      },
       {
         "schema_version": "1.0",
         "event_id": "evt_467be5025a61407fa8014e2b25221124",
