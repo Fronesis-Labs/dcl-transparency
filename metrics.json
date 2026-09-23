@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-23T07:00:01+00:00",
+  "generated_at": "2026-09-23T07:15:01+00:00",
   "total_audits": 58,
   "total_usdc_protected": 0.19,
   "recent_events": [
@@ -266,5 +266,13 @@
       "status": "no_live_traffic",
       "note": "x402-identity-guard is currently a library with no deployed instance producing traffic — this section will populate once a reference/demo deployment exists."
     }
+  },
+  "canonical_audit_events": {
+    "available": true,
+    "total": 0,
+    "events": [],
+    "databases_without_table": [
+      "/root/dcl-trust-oracle-x402/dcl_chain.db"
+    ]
   }
 }
