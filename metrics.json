@@ -1,8 +1,17 @@
 {
-  "generated_at": "2026-09-23T08:15:01+00:00",
-  "total_audits": 58,
-  "total_usdc_protected": 0.19,
+  "generated_at": "2026-09-23T08:21:18+00:00",
+  "total_audits": 59,
+  "total_usdc_protected": 0.2,
   "recent_events": [
+    {
+      "service": "bazaar",
+      "timestamp": "2026-09-23 08:20:30",
+      "agent_id": "bazaar-payment-probe",
+      "task_type": "fast",
+      "verdict": "COMMIT",
+      "route": "/evaluate/fast",
+      "amount_usdc": 0.01
+    },
     {
       "service": "bazaar",
       "timestamp": "2026-09-23 00:00:49",
@@ -140,18 +149,27 @@
     },
     "bazaar": {
       "available": true,
-      "total_audits": 45,
-      "commit_count": 38,
+      "total_audits": 46,
+      "commit_count": 39,
       "no_commit_count": 7,
       "unique_agents": 3,
-      "usdc_protected": 0.18,
+      "usdc_protected": 0.19,
       "network_distribution": [
         {
           "network": "eip155:8453",
-          "count": 11
+          "count": 12
         }
       ],
       "recent_events": [
+        {
+          "service": "bazaar",
+          "timestamp": "2026-09-23 08:20:30",
+          "agent_id": "bazaar-payment-probe",
+          "task_type": "fast",
+          "verdict": "COMMIT",
+          "route": "/evaluate/fast",
+          "amount_usdc": 0.01
+        },
         {
           "service": "bazaar",
           "timestamp": "2026-09-23 00:00:49",
@@ -269,10 +287,28 @@
   },
   "canonical_audit_events": {
     "available": true,
-    "total": 0,
-    "events": [],
-    "databases_without_table": [
-      "/root/dcl-trust-oracle-x402/dcl_chain.db"
+    "total": 1,
+    "events": [
+      {
+        "schema_version": "1.0",
+        "event_id": "evt_3019c4f046264364b65eff62b32c3a58",
+        "event_type": "dcl.audit.evaluated",
+        "timestamp": "2026-09-23T08:20:30.256+00:00",
+        "service": "dcl-trust-oracle",
+        "producer": "bazaar",
+        "route": "/evaluate/fast",
+        "agent_id": "bazaar-payment-probe",
+        "identity_source": "caller_supplied",
+        "identity_confidence": "unverified",
+        "trace_id": "tr_e54607856d1e43cdab3324ec64ab01cd",
+        "task_type": "fast",
+        "policy_id": "default",
+        "policy_version": "1.0.0",
+        "verdict": "COMMIT",
+        "proof": {
+          "tx_hash": "0xc08942a5cff9dca37214a7a1c3fc77df1f3b393f642e8a93a04a5a0069da3cb9"
+        }
+      }
     ]
   }
 }
