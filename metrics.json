@@ -1,8 +1,17 @@
 {
-  "generated_at": "2026-09-23T00:00:01+00:00",
-  "total_audits": 57,
+  "generated_at": "2026-09-23T00:15:01+00:00",
+  "total_audits": 58,
   "total_usdc_protected": 0.19,
   "recent_events": [
+    {
+      "service": "bazaar",
+      "timestamp": "2026-09-23 00:00:49",
+      "agent_id": "agent-123",
+      "task_type": "safety",
+      "verdict": "NO_COMMIT",
+      "route": "/evaluate/safety",
+      "amount_usdc": 0.01
+    },
     {
       "service": "bazaar",
       "timestamp": "2026-09-22 13:45:57",
@@ -131,18 +140,27 @@
     },
     "bazaar": {
       "available": true,
-      "total_audits": 44,
+      "total_audits": 45,
       "commit_count": 38,
-      "no_commit_count": 6,
+      "no_commit_count": 7,
       "unique_agents": 3,
       "usdc_protected": 0.18,
       "network_distribution": [
         {
           "network": "eip155:8453",
-          "count": 10
+          "count": 11
         }
       ],
       "recent_events": [
+        {
+          "service": "bazaar",
+          "timestamp": "2026-09-23 00:00:49",
+          "agent_id": "agent-123",
+          "task_type": "safety",
+          "verdict": "NO_COMMIT",
+          "route": "/evaluate/safety",
+          "amount_usdc": 0.01
+        },
         {
           "service": "bazaar",
           "timestamp": "2026-09-22 13:45:57",
