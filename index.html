@@ -38,6 +38,7 @@
   .canonical-panel { margin-top: 28px; }
   details summary { cursor: pointer; color: var(--muted); font-size: 12px; }
   details .service-stat { margin-top: 6px; word-break: break-all; }
+  td.payment-tx { word-break: break-all; max-width: 220px; }
   footer { margin-top: 32px; color: var(--muted); font-size: 12px; }
 </style>
 </head>
@@ -146,6 +147,11 @@ function renderCanonical(feed) {
             <div class="service-stat">trace_id: <b>${cell(event.trace_id)}</b></div>
           </details>`
         : '—';
+      const payment = event.payment && typeof event.payment === 'object' ? event.payment : null;
+      const amount = payment && payment.amount_usdc !== undefined && payment.amount_usdc !== null && payment.amount_usdc !== ''
+        ? esc(fmtUsdc(payment.amount_usdc))
+        : '—';
+      const paymentTx = payment ? cell(payment.tx_hash) : '—';
       return `<tr>
         <td>${cell(event.timestamp)}</td>
         <td><span class="badge">${cell(event.producer)}</span></td>
@@ -154,6 +160,8 @@ function renderCanonical(feed) {
         <td class="${verdictClass}">${cell(verdict)}</td>
         <td>${cell(event.policy_id)}</td>
         <td>${cell(event.policy_version)}</td>
+        <td>${amount}</td>
+        <td class="payment-tx">${paymentTx}</td>
         <td>${ids}</td>
       </tr>`;
     }).join('');
@@ -161,7 +169,7 @@ function renderCanonical(feed) {
       <table>
         <thead><tr>
           <th>Time (UTC)</th><th>Producer</th><th>Route</th><th>Agent</th>
-          <th>Verdict</th><th>Policy</th><th>Version</th><th>Ids</th>
+          <th>Verdict</th><th>Policy</th><th>Version</th><th>Amount</th><th>Payment tx</th><th>Ids</th>
         </tr></thead>
         <tbody>${rows}</tbody>
       </table>`;
