@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-25T11:13:31+00:00",
+  "generated_at": "2026-09-25T11:37:29+00:00",
   "total_audits": 61,
   "total_usdc_protected": 0.21,
   "recent_events": [
@@ -323,8 +323,49 @@
   },
   "canonical_audit_events": {
     "available": true,
-    "total": 5,
+    "total": 6,
     "events": [
+      {
+        "schema_version": "1.0",
+        "event_id": "evt_c3349c21a6bd460aa1c5ddfc991db583",
+        "event_type": "dcl.audit.evaluated",
+        "timestamp": "2026-09-25T11:36:05.519+00:00",
+        "service": "x402-identity-guard",
+        "producer": "tenjin-price-ceiling",
+        "route": "https://tenjin.sh/api/read/0x02752dd743fb1cf5439f36c073cf4cbefb1d25a6/four-ai-agent-work-markets-paid-but-competition-not-rails-is-the-bottleneck",
+        "agent_id": "eip155:8453:0x8004A169FB4a3325136EB29fA0ceB6D2e539a432:60741",
+        "identity_source": "erc8004_identity_registry_read",
+        "identity_confidence": "unverified",
+        "trace_id": "tr_faacd74b2fe64c979f30798b88493b77",
+        "task_type": "tenjin_price_ceiling",
+        "policy_id": "price-ceiling",
+        "policy_version": "1.0.0",
+        "verdict": "NO_COMMIT",
+        "proof": {
+          "tx_hash": "0xbf2baf2620d1f68eb1a80308847d313b2b44d2d98afbf15d4a8ac137bf407a27",
+          "chain_index": 0
+        },
+        "integration": {
+          "name": "tenjin-x402",
+          "network": "base"
+        },
+        "metadata": {
+          "agent_registry": "eip155:8453:0x8004A169FB4a3325136EB29fA0ceB6D2e539a432",
+          "agent_token_id": 60741,
+          "resource": "https://tenjin.sh/api/read/0x02752dd743fb1cf5439f36c073cf4cbefb1d25a6/four-ai-agent-work-markets-paid-but-competition-not-rails-is-the-bottleneck",
+          "ceiling_atomic_usdc": "50000",
+          "ceiling_usdc": "0.05",
+          "offered_amount": "100000",
+          "offered_amount_usdc": "0.10",
+          "offered_asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "offered_network": "eip155:8453",
+          "pay_to": "0x3fa75Cf07832CCB9611747aB1Af48a0530B64235",
+          "dcl_reason": "price 100000 atomic USDC exceeds ceiling 50000",
+          "default_policy_verdict": "COMMIT",
+          "default_policy_version": "1.0.0",
+          "note": "The price-ceiling rule returned NO_COMMIT before payment. No x402 payment was sent. proof.tx_hash is the local DCL hash. The caller was not authenticated."
+        }
+      },
       {
         "schema_version": "1.0",
         "event_id": "evt_fb9a846918d44be390f5d482a7af2e84",
