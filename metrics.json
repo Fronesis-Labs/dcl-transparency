@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-24T14:35:50+00:00",
+  "generated_at": "2026-09-25T11:13:31+00:00",
   "total_audits": 61,
   "total_usdc_protected": 0.21,
   "recent_events": [
@@ -323,8 +323,51 @@
   },
   "canonical_audit_events": {
     "available": true,
-    "total": 4,
+    "total": 5,
     "events": [
+      {
+        "schema_version": "1.0",
+        "event_id": "evt_fb9a846918d44be390f5d482a7af2e84",
+        "event_type": "dcl.audit.evaluated",
+        "timestamp": "2026-09-25T10:53:40.723+00:00",
+        "service": "x402-identity-guard",
+        "producer": "tenjin-dcl-paid-read",
+        "route": "https://tenjin.sh/api/read/bonx-cent-allocation/allocate-exact-cents-without-relying-on-decimal-context-precision",
+        "agent_id": "eip155:8453:0x8004A169FB4a3325136EB29fA0ceB6D2e539a432:60741",
+        "identity_source": "erc8004_identity_registry_read",
+        "identity_confidence": "unverified",
+        "trace_id": "tr_7668426fe21844a8a0cc8acbc7413c27",
+        "task_type": "tenjin_paid_read",
+        "policy_id": "default",
+        "policy_version": "1.0.0",
+        "verdict": "COMMIT",
+        "payment": {
+          "payment_id": "0x01fe54146ba319ec2b422f605562ac65fe50a9463e62794578c455c86edbdc9b",
+          "network": "eip155:8453",
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "amount": "50000",
+          "amount_usdc": "0.05",
+          "tx_hash": "0x7c0fad31ec54d2e01f341b023789851c6a0c2d4dfc9d8b5763cc68ba78c00860",
+          "payer": "0x21D8844377eCf82218A5FA9F42290dd3a23577C3",
+          "pay_to": "0x44316D454Ff7Ad8a4245E43f6ad4a8BdEfDbeab0"
+        },
+        "proof": {
+          "tx_hash": "0x63315f417fde267d2a35a432223ecbd0fbb9d820d9e818612769ffe0639267b9",
+          "chain_index": 0
+        },
+        "integration": {
+          "name": "tenjin-x402",
+          "network": "base"
+        },
+        "metadata": {
+          "agent_registry": "eip155:8453:0x8004A169FB4a3325136EB29fA0ceB6D2e539a432",
+          "agent_token_id": 60741,
+          "resource": "https://tenjin.sh/api/read/bonx-cent-allocation/allocate-exact-cents-without-relying-on-decimal-context-precision",
+          "dcl_reason": "All policy checks passed",
+          "dcl_confidence": 1.0,
+          "note": "payment.tx_hash is the Base USDC settlement. proof.tx_hash is the local DCL hash. The caller was not authenticated."
+        }
+      },
       {
         "schema_version": "1.0",
         "event_id": "evt_fbb095c1d78843c88e175f685a797707",
