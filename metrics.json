@@ -1,8 +1,17 @@
 {
-  "generated_at": "2026-09-26T11:30:02+00:00",
-  "total_audits": 61,
-  "total_usdc_protected": 0.21,
+  "generated_at": "2026-09-26T11:45:01+00:00",
+  "total_audits": 62,
+  "total_usdc_protected": 0.22,
   "recent_events": [
+    {
+      "service": "bazaar",
+      "timestamp": "2026-09-26 11:30:51",
+      "agent_id": "prod-smoke",
+      "task_type": "fast",
+      "verdict": "COMMIT",
+      "route": "/evaluate/fast",
+      "amount_usdc": 0.01
+    },
     {
       "service": "bazaar",
       "timestamp": "2026-09-23 13:35:10",
@@ -128,15 +137,6 @@
       "verdict": "COMMIT",
       "route": "/evaluate/strict",
       "amount_usdc": 0.05
-    },
-    {
-      "service": "bazaar",
-      "timestamp": "2026-09-10 08:30:13",
-      "agent_id": "bazaar-payment-probe",
-      "task_type": "fast",
-      "verdict": "COMMIT",
-      "route": "/evaluate/fast",
-      "amount_usdc": 0.01
     }
   ],
   "services": {
@@ -167,18 +167,27 @@
     },
     "bazaar": {
       "available": true,
-      "total_audits": 48,
-      "commit_count": 40,
+      "total_audits": 49,
+      "commit_count": 41,
       "no_commit_count": 8,
-      "unique_agents": 4,
-      "usdc_protected": 0.2,
+      "unique_agents": 5,
+      "usdc_protected": 0.21,
       "network_distribution": [
         {
           "network": "eip155:8453",
-          "count": 14
+          "count": 15
         }
       ],
       "recent_events": [
+        {
+          "service": "bazaar",
+          "timestamp": "2026-09-26 11:30:51",
+          "agent_id": "prod-smoke",
+          "task_type": "fast",
+          "verdict": "COMMIT",
+          "route": "/evaluate/fast",
+          "amount_usdc": 0.01
+        },
         {
           "service": "bazaar",
           "timestamp": "2026-09-23 13:35:10",
@@ -323,8 +332,28 @@
   },
   "canonical_audit_events": {
     "available": true,
-    "total": 6,
+    "total": 7,
     "events": [
+      {
+        "schema_version": "1.0",
+        "event_id": "evt_74e107ac701548cfb0e8393893cec2d1",
+        "event_type": "dcl.audit.evaluated",
+        "timestamp": "2026-09-26T11:30:51.211+00:00",
+        "service": "dcl-trust-oracle",
+        "producer": "bazaar",
+        "route": "/evaluate/fast",
+        "agent_id": "prod-smoke",
+        "identity_source": "caller_supplied",
+        "identity_confidence": "unverified",
+        "trace_id": "tr_5780eb3298a348d49b118bd961aa57fe",
+        "task_type": "fast",
+        "policy_id": "default",
+        "policy_version": "1.0.0",
+        "verdict": "COMMIT",
+        "proof": {
+          "tx_hash": "0x62ae6c5f00683f2afc260de5af60f7612039994f9c989aae7eee0c1ab9d5818c"
+        }
+      },
       {
         "schema_version": "1.0",
         "event_id": "evt_c3349c21a6bd460aa1c5ddfc991db583",
