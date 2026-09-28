@@ -1,8 +1,17 @@
 {
-  "generated_at": "2026-09-28T06:45:01+00:00",
-  "total_audits": 62,
+  "generated_at": "2026-09-28T07:00:01+00:00",
+  "total_audits": 63,
   "total_usdc_protected": 0.22,
   "recent_events": [
+    {
+      "service": "bazaar",
+      "timestamp": "2026-09-28 06:50:55",
+      "agent_id": "agent-123",
+      "task_type": "safety",
+      "verdict": "NO_COMMIT",
+      "route": "/evaluate/safety",
+      "amount_usdc": 0.01
+    },
     {
       "service": "bazaar",
       "timestamp": "2026-09-26 11:30:51",
@@ -128,15 +137,6 @@
       "verdict": "COMMIT",
       "route": "/evaluate/jailbreak",
       "amount_usdc": 0.02
-    },
-    {
-      "service": "bazaar",
-      "timestamp": "2026-09-10 08:43:18",
-      "agent_id": "bazaar-payment-probe",
-      "task_type": "strict",
-      "verdict": "COMMIT",
-      "route": "/evaluate/strict",
-      "amount_usdc": 0.05
     }
   ],
   "services": {
@@ -167,18 +167,27 @@
     },
     "bazaar": {
       "available": true,
-      "total_audits": 49,
+      "total_audits": 50,
       "commit_count": 41,
-      "no_commit_count": 8,
+      "no_commit_count": 9,
       "unique_agents": 5,
       "usdc_protected": 0.21,
       "network_distribution": [
         {
           "network": "eip155:8453",
-          "count": 15
+          "count": 16
         }
       ],
       "recent_events": [
+        {
+          "service": "bazaar",
+          "timestamp": "2026-09-28 06:50:55",
+          "agent_id": "agent-123",
+          "task_type": "safety",
+          "verdict": "NO_COMMIT",
+          "route": "/evaluate/safety",
+          "amount_usdc": 0.01
+        },
         {
           "service": "bazaar",
           "timestamp": "2026-09-26 11:30:51",
@@ -304,15 +313,6 @@
           "verdict": "COMMIT",
           "route": "/evaluate/strict",
           "amount_usdc": 0.05
-        },
-        {
-          "service": "bazaar",
-          "timestamp": "2026-09-10 08:30:13",
-          "agent_id": "bazaar-payment-probe",
-          "task_type": "fast",
-          "verdict": "COMMIT",
-          "route": "/evaluate/fast",
-          "amount_usdc": 0.01
         }
       ]
     },
