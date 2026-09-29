@@ -1,8 +1,17 @@
 {
-  "generated_at": "2026-09-29T17:15:01+00:00",
-  "total_audits": 63,
-  "total_usdc_protected": 0.22,
+  "generated_at": "2026-09-29T17:30:01+00:00",
+  "total_audits": 64,
+  "total_usdc_protected": 0.23,
   "recent_events": [
+    {
+      "service": "bazaar",
+      "timestamp": "2026-09-29 17:23:23",
+      "agent_id": "agent-123",
+      "task_type": "fast",
+      "verdict": "COMMIT",
+      "route": "/evaluate/fast",
+      "amount_usdc": 0.01
+    },
     {
       "service": "bazaar",
       "timestamp": "2026-09-28 06:50:55",
@@ -128,15 +137,6 @@
       "verdict": "NO_COMMIT",
       "route": "/evaluate/safety",
       "amount_usdc": 0.01
-    },
-    {
-      "service": "bazaar",
-      "timestamp": "2026-09-10 08:43:19",
-      "agent_id": "bazaar-payment-probe",
-      "task_type": "jailbreak",
-      "verdict": "COMMIT",
-      "route": "/evaluate/jailbreak",
-      "amount_usdc": 0.02
     }
   ],
   "services": {
@@ -167,18 +167,27 @@
     },
     "bazaar": {
       "available": true,
-      "total_audits": 50,
-      "commit_count": 41,
+      "total_audits": 51,
+      "commit_count": 42,
       "no_commit_count": 9,
       "unique_agents": 5,
-      "usdc_protected": 0.21,
+      "usdc_protected": 0.22,
       "network_distribution": [
         {
           "network": "eip155:8453",
-          "count": 16
+          "count": 17
         }
       ],
       "recent_events": [
+        {
+          "service": "bazaar",
+          "timestamp": "2026-09-29 17:23:23",
+          "agent_id": "agent-123",
+          "task_type": "fast",
+          "verdict": "COMMIT",
+          "route": "/evaluate/fast",
+          "amount_usdc": 0.01
+        },
         {
           "service": "bazaar",
           "timestamp": "2026-09-28 06:50:55",
@@ -304,15 +313,6 @@
           "verdict": "COMMIT",
           "route": "/evaluate/jailbreak",
           "amount_usdc": 0.02
-        },
-        {
-          "service": "bazaar",
-          "timestamp": "2026-09-10 08:43:18",
-          "agent_id": "bazaar-payment-probe",
-          "task_type": "strict",
-          "verdict": "COMMIT",
-          "route": "/evaluate/strict",
-          "amount_usdc": 0.05
         }
       ]
     },
@@ -332,8 +332,28 @@
   },
   "canonical_audit_events": {
     "available": true,
-    "total": 7,
+    "total": 8,
     "events": [
+      {
+        "schema_version": "1.0",
+        "event_id": "evt_1b9031ace3744b648b2b8634ff1e907c",
+        "event_type": "dcl.audit.evaluated",
+        "timestamp": "2026-09-29T17:23:23.211+00:00",
+        "service": "dcl-trust-oracle",
+        "producer": "bazaar",
+        "route": "/evaluate/fast",
+        "agent_id": "agent-123",
+        "identity_source": "caller_supplied",
+        "identity_confidence": "unverified",
+        "trace_id": "tr_9a5feba55a8743afad56bce361ccba90",
+        "task_type": "fast",
+        "policy_id": "default",
+        "policy_version": "1.0.0",
+        "verdict": "COMMIT",
+        "proof": {
+          "tx_hash": "0x00543a74ef8573aa96a7300f9c00b153eae31c9fe21a4cada102eb14d10bb6fe"
+        }
+      },
       {
         "schema_version": "1.0",
         "event_id": "evt_74e107ac701548cfb0e8393893cec2d1",
