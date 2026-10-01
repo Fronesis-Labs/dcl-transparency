@@ -42,6 +42,13 @@
   details summary { cursor: pointer; color: var(--muted); font-size: 12px; }
   details .service-stat { margin-top: 6px; word-break: break-all; }
   td.payment-tx { word-break: break-all; max-width: 220px; }
+  details.fold { border: 1px solid var(--border); border-radius: 8px; margin: 8px 0; background: #12171e; }
+  details.fold:not([open]) > .fold-body { display: none; }
+  details.fold > summary { cursor: pointer; padding: 10px 12px; color: var(--text); font-size: 13px; }
+  details.fold > summary::before { content: "▸  "; color: var(--accent); }
+  details.fold[open] > summary::before { content: "▾  "; }
+  details.day-fold { margin-left: 10px; }
+  details.fold > .fold-body { padding: 0 8px 10px; }
   .load-older { margin-top: 14px; background: transparent; color: var(--accent);
     border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; cursor: pointer; font-size: 13px; }
   .load-older:disabled { color: var(--muted); cursor: progress; }
@@ -73,10 +80,8 @@
 <footer>DCL Trust Oracle — data refreshes on each export cycle. Not real-time.</footer>
 
 <script>
-const FULL_LIST_LIMIT = 100;
-const PAGE_SIZE = 50;
-let feedEvents = [];
-let feedRendered = 0;
+const FLAT_LIMIT = 20;
+const DAY_CHUNK = 40;
 
 async function loadMetrics() {
   const res = await fetch('./metrics.json', { cache: 'no-store' });
@@ -205,64 +210,97 @@ function feedRow(event) {
     </tr>`;
 }
 
-function updateFeedChrome() {
-  const meta = document.getElementById('feed-meta');
-  const button = document.getElementById('load-older');
-  if (!meta || !button) return;
-  const oldest = feedEvents[feedEvents.length - 1];
-  const shownOldest = feedEvents[Math.max(feedRendered - 1, 0)];
-  const remaining = feedEvents.length - feedRendered;
-  const noun = feedEvents.length === 1 ? 'event' : 'events';
-  if (remaining > 0) {
-    meta.textContent = 'Showing ' + feedRendered + ' of ' + feedEvents.length
-      + ' ' + noun + ', newest first. History continues below, back to ' + oldest.timestamp + '.';
-    button.hidden = false;
-    button.disabled = false;
-    button.textContent = 'Load older events';
-  } else {
-    meta.textContent = feedEvents.length + ' ' + noun + ', newest first. Earliest: ' + oldest.timestamp + '.';
-    button.hidden = true;
-  }
-  if (shownOldest && remaining > 0) {
-    meta.textContent += ' Oldest on screen: ' + shownOldest.timestamp + '.';
-  }
+function eventNoun(count) {
+  return count === 1 ? 'event' : 'events';
 }
 
-function appendFeedRows(count) {
-  const tbody = document.querySelector('#feed tbody');
-  if (!tbody) return;
-  const next = feedEvents.slice(feedRendered, feedRendered + count);
-  tbody.insertAdjacentHTML('beforeend', next.map(feedRow).join(''));
-  feedRendered += next.length;
-  updateFeedChrome();
+function eventDay(event) {
+  const day = String(event.timestamp || '').slice(0, 10);
+  return /^\d{4}-\d{2}-\d{2}$/.test(day) ? day : 'Unknown date';
 }
 
-function renderFeed(events, historyError) {
-  const el = document.getElementById('feed');
-  feedEvents = events;
-  feedRendered = 0;
-  if (!events || events.length === 0) {
-    el.innerHTML = '<div class="placeholder">No events yet.</div>';
-    return;
-  }
-  const note = historyError
-    ? '<div class="placeholder">Older saved events could not be loaded. Showing the latest export only.</div>'
-    : '';
-  el.innerHTML = `
-    <div class="feed-meta" id="feed-meta"></div>
-    ${note}
-    <div class="table-scroll">
+function groupConsecutive(events, keyFn) {
+  const groups = [];
+  events.forEach(event => {
+    const key = keyFn(event);
+    const last = groups[groups.length - 1];
+    if (!last || last.key !== key) groups.push({ key, events: [event] });
+    else last.events.push(event);
+  });
+  return groups;
+}
+
+function feedTable(events) {
+  return `<div class="table-scroll">
       <table>
         <thead><tr>
           <th>Time (UTC)</th><th>Service</th><th>Agent</th><th>Verdict</th>
           <th>Type</th><th>Route</th><th>Amount</th><th></th>
         </tr></thead>
-        <tbody></tbody>
+        <tbody>${events.map(feedRow).join('')}</tbody>
       </table>
-    </div>
-    <button class="load-older" id="load-older" type="button" hidden>Load older events</button>`;
-  const initial = events.length <= FULL_LIST_LIMIT ? events.length : PAGE_SIZE;
-  appendFeedRows(initial);
+    </div>`;
+}
+
+function dayFolds(events, openFirstDay) {
+  return groupConsecutive(events, eventDay).map((group, dayIndex) => {
+    const parts = [];
+    for (let start = 0; start < group.events.length; start += DAY_CHUNK) {
+      parts.push(group.events.slice(start, start + DAY_CHUNK));
+    }
+    return parts.map((part, partIndex) => {
+      const range = parts.length === 1
+        ? ''
+        : ' · ' + (partIndex * DAY_CHUNK + 1) + '–' + (partIndex * DAY_CHUNK + part.length);
+      const label = group.key + ' · ' + group.events.length + ' ' + eventNoun(group.events.length) + range;
+      const open = openFirstDay && dayIndex === 0 && partIndex === 0 ? ' open' : '';
+      return `<details class="fold day-fold"${open}>
+        <summary>${esc(label)}</summary>
+        <div class="fold-body">${feedTable(part)}</div>
+      </details>`;
+    }).join('');
+  }).join('');
+}
+
+function historyFolds(events) {
+  return groupConsecutive(events, event => eventDay(event).slice(0, 7)).map((group, monthIndex) => {
+    const newest = group.events[0].timestamp;
+    const oldest = group.events[group.events.length - 1].timestamp;
+    const label = group.key + ' · ' + group.events.length + ' ' + eventNoun(group.events.length)
+      + ' · ' + newest + ' → ' + oldest;
+    const open = monthIndex === 0;
+    return `<details class="fold month-fold"${open ? ' open' : ''}>
+      <summary>${esc(label)}</summary>
+      <div class="fold-body">${dayFolds(group.events, open)}</div>
+    </details>`;
+  }).join('');
+}
+
+function renderFeed(events, historyError) {
+  const el = document.getElementById('feed');
+  if (!events || events.length === 0) {
+    el.innerHTML = '<div class="placeholder">No events yet.</div>';
+    return;
+  }
+  const oldest = events[events.length - 1];
+  const note = historyError
+    ? '<div class="placeholder">Older saved events could not be loaded. Showing the latest export only.</div>'
+    : '';
+  const folded = events.length > FLAT_LIMIT;
+  const meta = events.length + ' ' + eventNoun(events.length)
+    + ', newest first. Earliest: ' + oldest.timestamp + '.'
+    + (folded ? ' Earlier days and months are collapsed.' : '');
+  const body = folded
+    ? historyFolds(events)
+    : feedTable(events);
+  const collapse = folded
+    ? '<button class="load-older" id="collapse-history" type="button">Collapse history</button>'
+    : '';
+  el.innerHTML = `
+    <div class="feed-meta" id="feed-meta">${esc(meta)}</div>
+    ${note}
+    ${body}
+    ${collapse}`;
 }
 
 function renderCanonical(feed) {
@@ -330,11 +368,13 @@ function renderCanonical(feed) {
 }
 
 document.getElementById('feed').addEventListener('click', event => {
-  const button = event.target.closest('#load-older');
-  if (!button || button.disabled) return;
-  button.disabled = true;
-  button.textContent = 'Loading…';
-  requestAnimationFrame(() => appendFeedRows(PAGE_SIZE));
+  const button = event.target.closest('#collapse-history');
+  if (!button) return;
+  document.querySelectorAll('#feed details.fold').forEach(node => { node.open = false; });
+  const month = document.querySelector('#feed details.month-fold');
+  const day = document.querySelector('#feed details.day-fold');
+  if (month) month.open = true;
+  if (day) day.open = true;
 });
 
 Promise.all([
