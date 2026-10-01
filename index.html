@@ -24,12 +24,15 @@
   .kpi .value { font-size: 26px; font-weight: 600; color: var(--accent); margin-top: 6px; }
   .services-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 16px; margin-bottom: 28px; }
-  .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 18px; }
+  .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 18px;
+    min-width: 0; max-width: 100%; }
   .service-stat { font-size: 13px; color: var(--muted); margin: 3px 0; }
   .service-stat b { color: var(--text); }
   .placeholder { color: var(--muted); font-size: 13px; line-height: 1.5; }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--border); }
+  .feed-meta { color: var(--muted); font-size: 13px; margin: -4px 0 12px; line-height: 1.5; }
+  .table-scroll { width: 100%; max-width: 100%; overflow-x: auto; }
+  table { width: max-content; min-width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
   th { color: var(--muted); font-weight: 500; }
   .verdict-COMMIT { color: var(--accent); }
   .verdict-NO_COMMIT { color: var(--danger); }
@@ -39,6 +42,9 @@
   details summary { cursor: pointer; color: var(--muted); font-size: 12px; }
   details .service-stat { margin-top: 6px; word-break: break-all; }
   td.payment-tx { word-break: break-all; max-width: 220px; }
+  .load-older { margin-top: 14px; background: transparent; color: var(--accent);
+    border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; cursor: pointer; font-size: 13px; }
+  .load-older:disabled { color: var(--muted); cursor: progress; }
   footer { margin-top: 32px; color: var(--muted); font-size: 12px; }
 </style>
 </head>
@@ -56,7 +62,7 @@
 
 <div class="panel">
   <h2>Live Audit Stream (all services)</h2>
-  <div id="feed"></div>
+  <div id="feed"><div class="placeholder">Loading audit history…</div></div>
 </div>
 
 <div class="panel canonical-panel">
@@ -67,10 +73,25 @@
 <footer>DCL Trust Oracle — data refreshes on each export cycle. Not real-time.</footer>
 
 <script>
+const FULL_LIST_LIMIT = 100;
+const PAGE_SIZE = 50;
+let feedEvents = [];
+let feedRendered = 0;
+
 async function loadMetrics() {
   const res = await fetch('./metrics.json', { cache: 'no-store' });
   if (!res.ok) throw new Error('metrics.json not found');
   return res.json();
+}
+
+async function loadHistory() {
+  const res = await fetch('./audit_history.json', { cache: 'no-store' });
+  if (res.status === 404) return [];
+  if (!res.ok) throw new Error('audit history could not be loaded');
+  const body = await res.json();
+  if (Array.isArray(body)) return body;
+  if (body && Array.isArray(body.events)) return body.events;
+  return [];
 }
 
 function fmtUsdc(n) {
@@ -117,6 +138,133 @@ function cell(value) {
   return esc(value);
 }
 
+function eventKey(event) {
+  return [
+    event.service, event.timestamp, event.agent_id, event.task_type,
+    event.scan_type, event.verdict, event.route, event.amount_usdc
+  ].join('\u0001');
+}
+
+function eventTime(value) {
+  const parsed = Date.parse(String(value || '').replace(' ', 'T'));
+  return Number.isNaN(parsed) ? 0 : parsed;
+}
+
+function collectEvents(data, history) {
+  const groups = [];
+  if (data && Array.isArray(data.recent_events)) groups.push(data.recent_events);
+  const services = data && data.services;
+  if (services && typeof services === 'object') {
+    Object.keys(services).forEach(name => {
+      const service = services[name];
+      if (service && Array.isArray(service.recent_events)) groups.push(service.recent_events);
+    });
+  }
+  if (Array.isArray(history)) groups.push(history);
+  const seen = new Set();
+  const events = [];
+  groups.forEach(group => {
+    group.forEach(event => {
+      if (!event || typeof event !== 'object') return;
+      const key = eventKey(event);
+      if (seen.has(key)) return;
+      seen.add(key);
+      events.push(event);
+    });
+  });
+  events.sort((a, b) => eventTime(b.timestamp) - eventTime(a.timestamp));
+  return events;
+}
+
+function verdictCell(verdict) {
+  const text = verdict === undefined || verdict === null || verdict === '' ? '—' : String(verdict);
+  const known = text === 'COMMIT' || text === 'NO_COMMIT';
+  return `<td${known ? ' class="verdict-' + text + '"' : ''}>${esc(text)}</td>`;
+}
+
+function feedRow(event) {
+  const amount = event.amount_usdc != null && event.amount_usdc !== ''
+    ? esc(fmtUsdc(event.amount_usdc))
+    : '—';
+  const kind = event.task_type ?? event.scan_type;
+  return `<tr data-timestamp="${cell(event.timestamp)}">
+      <td>${cell(event.timestamp)}</td>
+      <td><span class="badge">${cell(event.service)}</span></td>
+      <td>${cell(event.agent_id)}</td>
+      ${verdictCell(event.verdict)}
+      <td>${cell(kind)}</td>
+      <td>${cell(event.route)}</td>
+      <td>${amount}</td>
+      <td><details>
+        <summary>payment</summary>
+        <div class="service-stat">route: <b>${cell(event.route)}</b></div>
+        <div class="service-stat">amount: <b>${amount}</b></div>
+        <div class="service-stat">agent: <b>${cell(event.agent_id)}</b></div>
+        <div class="service-stat">type: <b>${cell(kind)}</b></div>
+      </details></td>
+    </tr>`;
+}
+
+function updateFeedChrome() {
+  const meta = document.getElementById('feed-meta');
+  const button = document.getElementById('load-older');
+  if (!meta || !button) return;
+  const oldest = feedEvents[feedEvents.length - 1];
+  const shownOldest = feedEvents[Math.max(feedRendered - 1, 0)];
+  const remaining = feedEvents.length - feedRendered;
+  const noun = feedEvents.length === 1 ? 'event' : 'events';
+  if (remaining > 0) {
+    meta.textContent = 'Showing ' + feedRendered + ' of ' + feedEvents.length
+      + ' ' + noun + ', newest first. History continues below, back to ' + oldest.timestamp + '.';
+    button.hidden = false;
+    button.disabled = false;
+    button.textContent = 'Load older events';
+  } else {
+    meta.textContent = feedEvents.length + ' ' + noun + ', newest first. Earliest: ' + oldest.timestamp + '.';
+    button.hidden = true;
+  }
+  if (shownOldest && remaining > 0) {
+    meta.textContent += ' Oldest on screen: ' + shownOldest.timestamp + '.';
+  }
+}
+
+function appendFeedRows(count) {
+  const tbody = document.querySelector('#feed tbody');
+  if (!tbody) return;
+  const next = feedEvents.slice(feedRendered, feedRendered + count);
+  tbody.insertAdjacentHTML('beforeend', next.map(feedRow).join(''));
+  feedRendered += next.length;
+  updateFeedChrome();
+}
+
+function renderFeed(events, historyError) {
+  const el = document.getElementById('feed');
+  feedEvents = events;
+  feedRendered = 0;
+  if (!events || events.length === 0) {
+    el.innerHTML = '<div class="placeholder">No events yet.</div>';
+    return;
+  }
+  const note = historyError
+    ? '<div class="placeholder">Older saved events could not be loaded. Showing the latest export only.</div>'
+    : '';
+  el.innerHTML = `
+    <div class="feed-meta" id="feed-meta"></div>
+    ${note}
+    <div class="table-scroll">
+      <table>
+        <thead><tr>
+          <th>Time (UTC)</th><th>Service</th><th>Agent</th><th>Verdict</th>
+          <th>Type</th><th>Route</th><th>Amount</th><th></th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <button class="load-older" id="load-older" type="button" hidden>Load older events</button>`;
+  const initial = events.length <= FULL_LIST_LIMIT ? events.length : PAGE_SIZE;
+  appendFeedRows(initial);
+}
+
 function renderCanonical(feed) {
   const el = document.getElementById('canonical-feed');
   if (!el) return;
@@ -137,14 +285,13 @@ function renderCanonical(feed) {
     }
     const rows = events.map(event => {
       const verdict = typeof event.verdict === 'string' ? event.verdict : '';
-      const verdictClass = verdict === 'COMMIT' || verdict === 'NO_COMMIT'
-        ? 'verdict-' + verdict
-        : '';
-      const ids = event.event_id || event.trace_id
+      const ids = event.event_id || event.trace_id || (event.proof && typeof event.proof === 'object')
         ? `<details>
             <summary>ids</summary>
             <div class="service-stat">event_id: <b>${cell(event.event_id)}</b></div>
             <div class="service-stat">trace_id: <b>${cell(event.trace_id)}</b></div>
+            ${event.proof && event.proof.tx_hash ? `<div class="service-stat">proof tx: <b>${cell(event.proof.tx_hash)}</b></div>` : ''}
+            ${event.proof && event.proof.chain_index != null && event.proof.chain_index !== '' ? `<div class="service-stat">chain index: <b>${cell(event.proof.chain_index)}</b></div>` : ''}
           </details>`
         : '—';
       const payment = event.payment && typeof event.payment === 'object' ? event.payment : null;
@@ -152,12 +299,12 @@ function renderCanonical(feed) {
         ? esc(fmtUsdc(payment.amount_usdc))
         : '—';
       const paymentTx = payment ? cell(payment.tx_hash) : '—';
-      return `<tr>
+      return `<tr data-timestamp="${cell(event.timestamp)}">
         <td>${cell(event.timestamp)}</td>
         <td><span class="badge">${cell(event.producer)}</span></td>
         <td>${cell(event.route)}</td>
         <td>${cell(event.agent_id)}</td>
-        <td class="${verdictClass}">${cell(verdict)}</td>
+        ${verdictCell(verdict)}
         <td>${cell(event.policy_id)}</td>
         <td>${cell(event.policy_version)}</td>
         <td>${amount}</td>
@@ -166,42 +313,34 @@ function renderCanonical(feed) {
       </tr>`;
     }).join('');
     el.innerHTML = `
+      <div class="feed-meta">${events.length} canonical events. Open ids on any row for event, trace, and proof.</div>
+      <div class="table-scroll">
       <table>
         <thead><tr>
           <th>Time (UTC)</th><th>Producer</th><th>Route</th><th>Agent</th>
           <th>Verdict</th><th>Policy</th><th>Version</th><th>Amount</th><th>Payment tx</th><th>Ids</th>
         </tr></thead>
         <tbody>${rows}</tbody>
-      </table>`;
+      </table>
+      </div>`;
   } catch (err) {
     el.innerHTML = '<div class="placeholder">Canonical audit events could not be displayed.</div>';
     console.error(err);
   }
 }
 
-function renderFeed(events) {
-  const el = document.getElementById('feed');
-  if (!events || events.length === 0) {
-    el.innerHTML = '<div class="placeholder">No events yet.</div>';
-    return;
-  }
-  const rows = events.map(e => `
-    <tr>
-      <td>${e.timestamp}</td>
-      <td><span class="badge">${e.service}</span></td>
-      <td>${e.agent_id ?? '—'}</td>
-      <td class="verdict-${e.verdict}">${e.verdict}</td>
-      <td>${e.task_type ?? e.scan_type ?? '—'}</td>
-      <td>${e.amount_usdc != null ? fmtUsdc(e.amount_usdc) : '—'}</td>
-    </tr>`).join('');
-  el.innerHTML = `
-    <table>
-      <thead><tr><th>Time (UTC)</th><th>Service</th><th>Agent</th><th>Verdict</th><th>Type</th><th>Amount</th></tr></thead>
-      <tbody>${rows}</tbody>
-    </table>`;
-}
+document.getElementById('feed').addEventListener('click', event => {
+  const button = event.target.closest('#load-older');
+  if (!button || button.disabled) return;
+  button.disabled = true;
+  button.textContent = 'Loading…';
+  requestAnimationFrame(() => appendFeedRows(PAGE_SIZE));
+});
 
-loadMetrics().then(data => {
+Promise.all([
+  loadMetrics(),
+  loadHistory().then(events => ({ events, error: false })).catch(() => ({ events: [], error: true }))
+]).then(([data, history]) => {
   document.getElementById('generated-at').textContent =
     'Last updated: ' + new Date(data.generated_at).toUTCString();
   document.getElementById('kpi-audits').textContent = data.total_audits;
@@ -213,10 +352,11 @@ loadMetrics().then(data => {
     renderServiceCard('sentinel', 'Update Sentinel', data.services.sentinel) +
     renderServiceCard('identity_guard', 'Identity Guard (TRON)', data.services.identity_guard);
 
-  renderFeed(data.recent_events);
+  renderFeed(collectEvents(data, history.events), history.error);
   renderCanonical(data.canonical_audit_events);
 }).catch(err => {
   document.getElementById('generated-at').textContent = 'metrics.json not found yet — waiting for first export.';
+  document.getElementById('feed').innerHTML = '<div class="placeholder">Audit events could not be loaded.</div>';
   console.error(err);
 });
 </script>
