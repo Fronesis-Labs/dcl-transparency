@@ -1,8 +1,26 @@
 {
-  "generated_at": "2026-10-01T01:15:01+00:00",
-  "total_audits": 73,
-  "total_usdc_protected": 0.48,
+  "generated_at": "2026-10-01T01:30:02+00:00",
+  "total_audits": 75,
+  "total_usdc_protected": 0.52,
   "recent_events": [
+    {
+      "service": "bazaar",
+      "timestamp": "2026-10-01 01:24:10",
+      "agent_id": "bazaar-discovery-reindex",
+      "task_type": "unknown",
+      "verdict": "COMMIT",
+      "route": "/evaluate/pii",
+      "amount_usdc": 0.02
+    },
+    {
+      "service": "bazaar",
+      "timestamp": "2026-10-01 01:22:37",
+      "agent_id": "bazaar-discovery-reindex",
+      "task_type": "unknown",
+      "verdict": "COMMIT",
+      "route": "/evaluate/secrets",
+      "amount_usdc": 0.02
+    },
     {
       "service": "bazaar",
       "timestamp": "2026-09-30 15:06:45",
@@ -119,24 +137,6 @@
       "verdict": "COMMIT",
       "route": "/evaluate/fast",
       "amount_usdc": 0.01
-    },
-    {
-      "service": "bazaar",
-      "timestamp": "2026-09-23 11:46:42",
-      "agent_id": "bazaar-payment-probe",
-      "task_type": "fast",
-      "verdict": "NO_COMMIT",
-      "route": "/evaluate/fast",
-      "amount_usdc": 0.01
-    },
-    {
-      "service": "bazaar",
-      "timestamp": "2026-09-23 08:20:30",
-      "agent_id": "bazaar-payment-probe",
-      "task_type": "fast",
-      "verdict": "COMMIT",
-      "route": "/evaluate/fast",
-      "amount_usdc": 0.01
     }
   ],
   "services": {
@@ -167,18 +167,36 @@
     },
     "bazaar": {
       "available": true,
-      "total_audits": 60,
-      "commit_count": 50,
+      "total_audits": 62,
+      "commit_count": 52,
       "no_commit_count": 10,
-      "unique_agents": 5,
-      "usdc_protected": 0.47,
+      "unique_agents": 6,
+      "usdc_protected": 0.51,
       "network_distribution": [
         {
           "network": "eip155:8453",
-          "count": 26
+          "count": 28
         }
       ],
       "recent_events": [
+        {
+          "service": "bazaar",
+          "timestamp": "2026-10-01 01:24:10",
+          "agent_id": "bazaar-discovery-reindex",
+          "task_type": "unknown",
+          "verdict": "COMMIT",
+          "route": "/evaluate/pii",
+          "amount_usdc": 0.02
+        },
+        {
+          "service": "bazaar",
+          "timestamp": "2026-10-01 01:22:37",
+          "agent_id": "bazaar-discovery-reindex",
+          "task_type": "unknown",
+          "verdict": "COMMIT",
+          "route": "/evaluate/secrets",
+          "amount_usdc": 0.02
+        },
         {
           "service": "bazaar",
           "timestamp": "2026-09-30 15:06:45",
@@ -291,24 +309,6 @@
           "service": "bazaar",
           "timestamp": "2026-09-23 13:35:10",
           "agent_id": "dcl-langchain",
-          "task_type": "fast",
-          "verdict": "COMMIT",
-          "route": "/evaluate/fast",
-          "amount_usdc": 0.01
-        },
-        {
-          "service": "bazaar",
-          "timestamp": "2026-09-23 11:46:42",
-          "agent_id": "bazaar-payment-probe",
-          "task_type": "fast",
-          "verdict": "NO_COMMIT",
-          "route": "/evaluate/fast",
-          "amount_usdc": 0.01
-        },
-        {
-          "service": "bazaar",
-          "timestamp": "2026-09-23 08:20:30",
-          "agent_id": "bazaar-payment-probe",
           "task_type": "fast",
           "verdict": "COMMIT",
           "route": "/evaluate/fast",
