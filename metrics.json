@@ -1,8 +1,71 @@
 {
-  "generated_at": "2026-10-01T01:30:02+00:00",
-  "total_audits": 75,
-  "total_usdc_protected": 0.52,
+  "generated_at": "2026-10-01T01:45:02+00:00",
+  "total_audits": 82,
+  "total_usdc_protected": 0.77,
   "recent_events": [
+    {
+      "service": "bazaar",
+      "timestamp": "2026-10-01 01:43:04",
+      "agent_id": "bazaar-discovery-reindex",
+      "task_type": "safety",
+      "verdict": "COMMIT",
+      "route": "/evaluate/safety",
+      "amount_usdc": 0.01
+    },
+    {
+      "service": "bazaar",
+      "timestamp": "2026-10-01 01:42:52",
+      "agent_id": "bazaar-discovery-reindex",
+      "task_type": "unknown",
+      "verdict": "COMMIT",
+      "route": "/evaluate/pii",
+      "amount_usdc": 0.02
+    },
+    {
+      "service": "bazaar",
+      "timestamp": "2026-10-01 01:42:39",
+      "agent_id": "bazaar-discovery-reindex",
+      "task_type": "unknown",
+      "verdict": "COMMIT",
+      "route": "/evaluate/secrets",
+      "amount_usdc": 0.02
+    },
+    {
+      "service": "bazaar",
+      "timestamp": "2026-10-01 01:42:27",
+      "agent_id": "bazaar-discovery-reindex",
+      "task_type": "jailbreak",
+      "verdict": "COMMIT",
+      "route": "/evaluate/jailbreak",
+      "amount_usdc": 0.02
+    },
+    {
+      "service": "bazaar",
+      "timestamp": "2026-10-01 01:42:14",
+      "agent_id": "bazaar-discovery-reindex",
+      "task_type": "quality",
+      "verdict": "COMMIT",
+      "route": "/evaluate/quality",
+      "amount_usdc": 0.03
+    },
+    {
+      "service": "bazaar",
+      "timestamp": "2026-10-01 01:42:02",
+      "agent_id": "bazaar-discovery-reindex",
+      "task_type": "strict",
+      "verdict": "COMMIT",
+      "route": "/evaluate/strict",
+      "amount_usdc": 0.05
+    },
+    {
+      "service": "bazaar",
+      "timestamp": "2026-10-01 01:41:37",
+      "agent_id": "bazaar-discovery-reindex",
+      "task_type": "batch_item",
+      "verdict": "COMMIT",
+      "route": "/evaluate/batch",
+      "amount_usdc": 0.1
+    },
     {
       "service": "bazaar",
       "timestamp": "2026-10-01 01:24:10",
@@ -74,69 +137,6 @@
       "verdict": "NO_COMMIT",
       "route": "/evaluate/jailbreak",
       "amount_usdc": 0.02
-    },
-    {
-      "service": "bazaar",
-      "timestamp": "2026-09-30 15:05:28",
-      "agent_id": "bazaar-payment-probe",
-      "task_type": "strict",
-      "verdict": "COMMIT",
-      "route": "/evaluate/strict",
-      "amount_usdc": 0.05
-    },
-    {
-      "service": "bazaar",
-      "timestamp": "2026-09-30 14:12:20",
-      "agent_id": "bazaar-payment-probe",
-      "task_type": "fast",
-      "verdict": "COMMIT",
-      "route": "/evaluate/fast",
-      "amount_usdc": 0.01
-    },
-    {
-      "service": "bazaar",
-      "timestamp": "2026-09-30 12:01:19",
-      "agent_id": "agent-123",
-      "task_type": "fast",
-      "verdict": "COMMIT",
-      "route": "/evaluate/fast",
-      "amount_usdc": 0.01
-    },
-    {
-      "service": "bazaar",
-      "timestamp": "2026-09-29 17:23:23",
-      "agent_id": "agent-123",
-      "task_type": "fast",
-      "verdict": "COMMIT",
-      "route": "/evaluate/fast",
-      "amount_usdc": 0.01
-    },
-    {
-      "service": "bazaar",
-      "timestamp": "2026-09-28 06:50:55",
-      "agent_id": "agent-123",
-      "task_type": "safety",
-      "verdict": "NO_COMMIT",
-      "route": "/evaluate/safety",
-      "amount_usdc": 0.01
-    },
-    {
-      "service": "bazaar",
-      "timestamp": "2026-09-26 11:30:51",
-      "agent_id": "prod-smoke",
-      "task_type": "fast",
-      "verdict": "COMMIT",
-      "route": "/evaluate/fast",
-      "amount_usdc": 0.01
-    },
-    {
-      "service": "bazaar",
-      "timestamp": "2026-09-23 13:35:10",
-      "agent_id": "dcl-langchain",
-      "task_type": "fast",
-      "verdict": "COMMIT",
-      "route": "/evaluate/fast",
-      "amount_usdc": 0.01
     }
   ],
   "services": {
@@ -167,18 +167,81 @@
     },
     "bazaar": {
       "available": true,
-      "total_audits": 62,
-      "commit_count": 52,
+      "total_audits": 69,
+      "commit_count": 59,
       "no_commit_count": 10,
       "unique_agents": 6,
-      "usdc_protected": 0.51,
+      "usdc_protected": 0.76,
       "network_distribution": [
         {
           "network": "eip155:8453",
-          "count": 28
+          "count": 35
         }
       ],
       "recent_events": [
+        {
+          "service": "bazaar",
+          "timestamp": "2026-10-01 01:43:04",
+          "agent_id": "bazaar-discovery-reindex",
+          "task_type": "safety",
+          "verdict": "COMMIT",
+          "route": "/evaluate/safety",
+          "amount_usdc": 0.01
+        },
+        {
+          "service": "bazaar",
+          "timestamp": "2026-10-01 01:42:52",
+          "agent_id": "bazaar-discovery-reindex",
+          "task_type": "unknown",
+          "verdict": "COMMIT",
+          "route": "/evaluate/pii",
+          "amount_usdc": 0.02
+        },
+        {
+          "service": "bazaar",
+          "timestamp": "2026-10-01 01:42:39",
+          "agent_id": "bazaar-discovery-reindex",
+          "task_type": "unknown",
+          "verdict": "COMMIT",
+          "route": "/evaluate/secrets",
+          "amount_usdc": 0.02
+        },
+        {
+          "service": "bazaar",
+          "timestamp": "2026-10-01 01:42:27",
+          "agent_id": "bazaar-discovery-reindex",
+          "task_type": "jailbreak",
+          "verdict": "COMMIT",
+          "route": "/evaluate/jailbreak",
+          "amount_usdc": 0.02
+        },
+        {
+          "service": "bazaar",
+          "timestamp": "2026-10-01 01:42:14",
+          "agent_id": "bazaar-discovery-reindex",
+          "task_type": "quality",
+          "verdict": "COMMIT",
+          "route": "/evaluate/quality",
+          "amount_usdc": 0.03
+        },
+        {
+          "service": "bazaar",
+          "timestamp": "2026-10-01 01:42:02",
+          "agent_id": "bazaar-discovery-reindex",
+          "task_type": "strict",
+          "verdict": "COMMIT",
+          "route": "/evaluate/strict",
+          "amount_usdc": 0.05
+        },
+        {
+          "service": "bazaar",
+          "timestamp": "2026-10-01 01:41:37",
+          "agent_id": "bazaar-discovery-reindex",
+          "task_type": "batch_item",
+          "verdict": "COMMIT",
+          "route": "/evaluate/batch",
+          "amount_usdc": 0.1
+        },
         {
           "service": "bazaar",
           "timestamp": "2026-10-01 01:24:10",
@@ -250,69 +313,6 @@
           "verdict": "NO_COMMIT",
           "route": "/evaluate/jailbreak",
           "amount_usdc": 0.02
-        },
-        {
-          "service": "bazaar",
-          "timestamp": "2026-09-30 15:05:28",
-          "agent_id": "bazaar-payment-probe",
-          "task_type": "strict",
-          "verdict": "COMMIT",
-          "route": "/evaluate/strict",
-          "amount_usdc": 0.05
-        },
-        {
-          "service": "bazaar",
-          "timestamp": "2026-09-30 14:12:20",
-          "agent_id": "bazaar-payment-probe",
-          "task_type": "fast",
-          "verdict": "COMMIT",
-          "route": "/evaluate/fast",
-          "amount_usdc": 0.01
-        },
-        {
-          "service": "bazaar",
-          "timestamp": "2026-09-30 12:01:19",
-          "agent_id": "agent-123",
-          "task_type": "fast",
-          "verdict": "COMMIT",
-          "route": "/evaluate/fast",
-          "amount_usdc": 0.01
-        },
-        {
-          "service": "bazaar",
-          "timestamp": "2026-09-29 17:23:23",
-          "agent_id": "agent-123",
-          "task_type": "fast",
-          "verdict": "COMMIT",
-          "route": "/evaluate/fast",
-          "amount_usdc": 0.01
-        },
-        {
-          "service": "bazaar",
-          "timestamp": "2026-09-28 06:50:55",
-          "agent_id": "agent-123",
-          "task_type": "safety",
-          "verdict": "NO_COMMIT",
-          "route": "/evaluate/safety",
-          "amount_usdc": 0.01
-        },
-        {
-          "service": "bazaar",
-          "timestamp": "2026-09-26 11:30:51",
-          "agent_id": "prod-smoke",
-          "task_type": "fast",
-          "verdict": "COMMIT",
-          "route": "/evaluate/fast",
-          "amount_usdc": 0.01
-        },
-        {
-          "service": "bazaar",
-          "timestamp": "2026-09-23 13:35:10",
-          "agent_id": "dcl-langchain",
-          "task_type": "fast",
-          "verdict": "COMMIT",
-          "route": "/evaluate/fast",
-          "amount_usdc": 0.01
         }
       ]
     },
