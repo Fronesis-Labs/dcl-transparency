@@ -1,8 +1,26 @@
 {
-  "generated_at": "2026-10-01T06:45:02+00:00",
-  "total_audits": 82,
-  "total_usdc_protected": 0.77,
+  "generated_at": "2026-10-01T07:00:03+00:00",
+  "total_audits": 84,
+  "total_usdc_protected": 0.81,
   "recent_events": [
+    {
+      "service": "webhook",
+      "timestamp": "2026-10-01 06:55:48",
+      "agent_id": "fronesis",
+      "task_type": "post",
+      "verdict": "COMMIT",
+      "route": "/evaluate/jailbreak",
+      "amount_usdc": 0.02
+    },
+    {
+      "service": "webhook",
+      "timestamp": "2026-10-01 06:54:24",
+      "agent_id": "fronesis",
+      "task_type": "post",
+      "verdict": "COMMIT",
+      "route": "/evaluate/jailbreak",
+      "amount_usdc": 0.02
+    },
     {
       "service": "bazaar",
       "timestamp": "2026-10-01 01:43:04",
@@ -119,41 +137,41 @@
       "verdict": "COMMIT",
       "route": "/evaluate/quality",
       "amount_usdc": 0.03
-    },
-    {
-      "service": "bazaar",
-      "timestamp": "2026-09-30 15:05:54",
-      "agent_id": "bazaar-payment-probe",
-      "task_type": "safety",
-      "verdict": "COMMIT",
-      "route": "/evaluate/safety",
-      "amount_usdc": 0.01
-    },
-    {
-      "service": "bazaar",
-      "timestamp": "2026-09-30 15:05:41",
-      "agent_id": "bazaar-payment-probe",
-      "task_type": "jailbreak",
-      "verdict": "NO_COMMIT",
-      "route": "/evaluate/jailbreak",
-      "amount_usdc": 0.02
     }
   ],
   "services": {
     "webhook": {
       "available": true,
-      "total_audits": 13,
-      "commit_count": 9,
+      "total_audits": 15,
+      "commit_count": 11,
       "no_commit_count": 4,
-      "unique_agents": 8,
-      "usdc_protected": 0.01,
+      "unique_agents": 9,
+      "usdc_protected": 0.05,
       "network_distribution": [
         {
           "network": "base",
-          "count": 1
+          "count": 3
         }
       ],
       "recent_events": [
+        {
+          "service": "webhook",
+          "timestamp": "2026-10-01 06:55:48",
+          "agent_id": "fronesis",
+          "task_type": "post",
+          "verdict": "COMMIT",
+          "route": "/evaluate/jailbreak",
+          "amount_usdc": 0.02
+        },
+        {
+          "service": "webhook",
+          "timestamp": "2026-10-01 06:54:24",
+          "agent_id": "fronesis",
+          "task_type": "post",
+          "verdict": "COMMIT",
+          "route": "/evaluate/jailbreak",
+          "amount_usdc": 0.02
+        },
         {
           "service": "webhook",
           "timestamp": "2026-09-10 10:23:39",
