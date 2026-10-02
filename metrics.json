@@ -1,8 +1,26 @@
 {
-  "generated_at": "2026-10-02T06:45:02+00:00",
-  "total_audits": 92,
-  "total_usdc_protected": 0.94,
+  "generated_at": "2026-10-02T07:00:02+00:00",
+  "total_audits": 94,
+  "total_usdc_protected": 0.95,
   "recent_events": [
+    {
+      "service": "webhook",
+      "timestamp": "2026-10-02 06:46:19",
+      "agent_id": "dcl-guard",
+      "task_type": "http_side_effect",
+      "verdict": "NO_COMMIT",
+      "route": "/evaluate/fast",
+      "amount_usdc": 0.01
+    },
+    {
+      "service": "webhook",
+      "timestamp": "2026-10-02 06:45:23",
+      "agent_id": "dcl-guard",
+      "task_type": "http_side_effect",
+      "verdict": "COMMIT",
+      "route": "/evaluate/fast",
+      "amount_usdc": 0.01
+    },
     {
       "service": "webhook",
       "timestamp": "2026-10-02 04:41:24",
@@ -119,41 +137,41 @@
       "verdict": "COMMIT",
       "route": "/evaluate/secrets",
       "amount_usdc": 0.02
-    },
-    {
-      "service": "bazaar",
-      "timestamp": "2026-10-01 01:42:27",
-      "agent_id": "bazaar-discovery-reindex",
-      "task_type": "jailbreak",
-      "verdict": "COMMIT",
-      "route": "/evaluate/jailbreak",
-      "amount_usdc": 0.02
-    },
-    {
-      "service": "bazaar",
-      "timestamp": "2026-10-01 01:42:14",
-      "agent_id": "bazaar-discovery-reindex",
-      "task_type": "quality",
-      "verdict": "COMMIT",
-      "route": "/evaluate/quality",
-      "amount_usdc": 0.03
     }
   ],
   "services": {
     "webhook": {
       "available": true,
-      "total_audits": 22,
-      "commit_count": 18,
-      "no_commit_count": 4,
+      "total_audits": 24,
+      "commit_count": 19,
+      "no_commit_count": 5,
       "unique_agents": 10,
-      "usdc_protected": 0.18,
+      "usdc_protected": 0.19,
       "network_distribution": [
         {
           "network": "base",
-          "count": 10
+          "count": 12
         }
       ],
       "recent_events": [
+        {
+          "service": "webhook",
+          "timestamp": "2026-10-02 06:46:19",
+          "agent_id": "dcl-guard",
+          "task_type": "http_side_effect",
+          "verdict": "NO_COMMIT",
+          "route": "/evaluate/fast",
+          "amount_usdc": 0.01
+        },
+        {
+          "service": "webhook",
+          "timestamp": "2026-10-02 06:45:23",
+          "agent_id": "dcl-guard",
+          "task_type": "http_side_effect",
+          "verdict": "COMMIT",
+          "route": "/evaluate/fast",
+          "amount_usdc": 0.01
+        },
         {
           "service": "webhook",
           "timestamp": "2026-10-02 04:41:24",
@@ -413,8 +431,54 @@
   },
   "canonical_audit_events": {
     "available": true,
-    "total": 11,
+    "total": 13,
     "events": [
+      {
+        "schema_version": "1.0",
+        "event_id": "evt_6eefbb4339ee41e6bc1deb6fe4f00b1d",
+        "event_type": "dcl.audit.evaluated",
+        "timestamp": "2026-10-02T06:46:19.567+00:00",
+        "service": "dcl-trust-oracle",
+        "producer": "webhook",
+        "route": "/evaluate/fast",
+        "agent_id": "dcl-guard",
+        "identity_source": "caller_supplied",
+        "identity_confidence": "unverified",
+        "trace_id": "tr_354eb2a948db4daa9d5dc0a88093be1c",
+        "task_type": "http_side_effect",
+        "policy_id": "default",
+        "policy_version": "1.0.0",
+        "verdict": "NO_COMMIT",
+        "proof": {
+          "tx_hash": "0xa244dccca0682a89441f99bc982ec1f260a2493f667e80c72bd1c4a22d846689"
+        },
+        "metadata": {
+          "request_digest": "bc6bc2e1d5e9101a177d0d07469670d81699305e41e23b6fe6ff46d70b8b806e"
+        }
+      },
+      {
+        "schema_version": "1.0",
+        "event_id": "evt_55d9aeab3a1d449cb07b6041949feecb",
+        "event_type": "dcl.audit.evaluated",
+        "timestamp": "2026-10-02T06:45:22.973+00:00",
+        "service": "dcl-trust-oracle",
+        "producer": "webhook",
+        "route": "/evaluate/fast",
+        "agent_id": "dcl-guard",
+        "identity_source": "caller_supplied",
+        "identity_confidence": "unverified",
+        "trace_id": "tr_018096c1388b45868ed00a2a0047d290",
+        "task_type": "http_side_effect",
+        "policy_id": "default",
+        "policy_version": "1.0.0",
+        "verdict": "COMMIT",
+        "proof": {
+          "tx_hash": "0xaa13b48b6089eb31c9050719b61705d2a33dce911e0299b32c5244cb8821db83"
+        },
+        "metadata": {
+          "request_digest": "841bae2cf5392e1c55c4be5bae4187722df1af40166b1f8fc5c485d515b70019"
+        }
+      },
       {
         "schema_version": "1.0",
         "event_id": "evt_39785c74889c4ad7918ace188d16c6f5",
