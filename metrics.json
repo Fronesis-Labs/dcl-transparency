@@ -1,8 +1,17 @@
 {
-  "generated_at": "2026-10-02T02:30:03+00:00",
-  "total_audits": 90,
-  "total_usdc_protected": 0.91,
+  "generated_at": "2026-10-02T02:45:02+00:00",
+  "total_audits": 91,
+  "total_usdc_protected": 0.92,
   "recent_events": [
+    {
+      "service": "webhook",
+      "timestamp": "2026-10-02 02:37:20",
+      "agent_id": "dcl-guard",
+      "task_type": "http_side_effect",
+      "verdict": "COMMIT",
+      "route": "/evaluate/fast",
+      "amount_usdc": 0.01
+    },
     {
       "service": "bazaar",
       "timestamp": "2026-10-02 02:17:19",
@@ -128,32 +137,32 @@
       "verdict": "COMMIT",
       "route": "/evaluate/strict",
       "amount_usdc": 0.05
-    },
-    {
-      "service": "bazaar",
-      "timestamp": "2026-10-01 01:41:37",
-      "agent_id": "bazaar-discovery-reindex",
-      "task_type": "batch_item",
-      "verdict": "COMMIT",
-      "route": "/evaluate/batch",
-      "amount_usdc": 0.1
     }
   ],
   "services": {
     "webhook": {
       "available": true,
-      "total_audits": 20,
-      "commit_count": 16,
+      "total_audits": 21,
+      "commit_count": 17,
       "no_commit_count": 4,
-      "unique_agents": 9,
-      "usdc_protected": 0.15,
+      "unique_agents": 10,
+      "usdc_protected": 0.16,
       "network_distribution": [
         {
           "network": "base",
-          "count": 8
+          "count": 9
         }
       ],
       "recent_events": [
+        {
+          "service": "webhook",
+          "timestamp": "2026-10-02 02:37:20",
+          "agent_id": "dcl-guard",
+          "task_type": "http_side_effect",
+          "verdict": "COMMIT",
+          "route": "/evaluate/fast",
+          "amount_usdc": 0.01
+        },
         {
           "service": "webhook",
           "timestamp": "2026-10-02 00:40:26",
@@ -395,8 +404,28 @@
   },
   "canonical_audit_events": {
     "available": true,
-    "total": 10,
+    "total": 11,
     "events": [
+      {
+        "schema_version": "1.0",
+        "event_id": "evt_39785c74889c4ad7918ace188d16c6f5",
+        "event_type": "dcl.audit.evaluated",
+        "timestamp": "2026-10-02T02:37:20.299+00:00",
+        "service": "dcl-trust-oracle",
+        "producer": "webhook",
+        "route": "/evaluate/fast",
+        "agent_id": "dcl-guard",
+        "identity_source": "caller_supplied",
+        "identity_confidence": "unverified",
+        "trace_id": "tr_a63d032c0a4a42c4baee059ec0fb3f3d",
+        "task_type": "http_side_effect",
+        "policy_id": "default",
+        "policy_version": "1.0.0",
+        "verdict": "COMMIT",
+        "proof": {
+          "tx_hash": "0x7e7878a042642b5c91104095855076dae8fb1f512bfd041532f30ef7ea3b8174"
+        }
+      },
       {
         "schema_version": "1.0",
         "event_id": "evt_8925bade24c24595a37432ceda4a3256",
