@@ -1,8 +1,17 @@
 {
-  "generated_at": "2026-10-02T02:15:01+00:00",
-  "total_audits": 89,
+  "generated_at": "2026-10-02T02:30:03+00:00",
+  "total_audits": 90,
   "total_usdc_protected": 0.91,
   "recent_events": [
+    {
+      "service": "bazaar",
+      "timestamp": "2026-10-02 02:17:19",
+      "agent_id": "agent-123",
+      "task_type": "safety",
+      "verdict": "NO_COMMIT",
+      "route": "/evaluate/safety",
+      "amount_usdc": 0.01
+    },
     {
       "service": "webhook",
       "timestamp": "2026-10-02 00:40:26",
@@ -128,15 +137,6 @@
       "verdict": "COMMIT",
       "route": "/evaluate/batch",
       "amount_usdc": 0.1
-    },
-    {
-      "service": "bazaar",
-      "timestamp": "2026-10-01 01:24:10",
-      "agent_id": "bazaar-discovery-reindex",
-      "task_type": "unknown",
-      "verdict": "COMMIT",
-      "route": "/evaluate/pii",
-      "amount_usdc": 0.02
     }
   ],
   "services": {
@@ -230,18 +230,27 @@
     },
     "bazaar": {
       "available": true,
-      "total_audits": 69,
+      "total_audits": 70,
       "commit_count": 59,
-      "no_commit_count": 10,
+      "no_commit_count": 11,
       "unique_agents": 6,
       "usdc_protected": 0.76,
       "network_distribution": [
         {
           "network": "eip155:8453",
-          "count": 35
+          "count": 36
         }
       ],
       "recent_events": [
+        {
+          "service": "bazaar",
+          "timestamp": "2026-10-02 02:17:19",
+          "agent_id": "agent-123",
+          "task_type": "safety",
+          "verdict": "NO_COMMIT",
+          "route": "/evaluate/safety",
+          "amount_usdc": 0.01
+        },
         {
           "service": "bazaar",
           "timestamp": "2026-10-01 01:43:04",
@@ -367,15 +376,6 @@
           "verdict": "COMMIT",
           "route": "/evaluate/safety",
           "amount_usdc": 0.01
-        },
-        {
-          "service": "bazaar",
-          "timestamp": "2026-09-30 15:05:41",
-          "agent_id": "bazaar-payment-probe",
-          "task_type": "jailbreak",
-          "verdict": "NO_COMMIT",
-          "route": "/evaluate/jailbreak",
-          "amount_usdc": 0.02
         }
       ]
     },
