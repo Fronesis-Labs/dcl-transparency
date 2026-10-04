@@ -1,8 +1,17 @@
 {
-  "generated_at": "2026-10-04T09:00:02+00:00",
-  "total_audits": 105,
-  "total_usdc_protected": 1.17,
+  "generated_at": "2026-10-04T09:15:01+00:00",
+  "total_audits": 106,
+  "total_usdc_protected": 1.19,
   "recent_events": [
+    {
+      "service": "webhook",
+      "timestamp": "2026-10-04 09:01:39",
+      "agent_id": "fronesis",
+      "task_type": "post",
+      "verdict": "COMMIT",
+      "route": "/evaluate/jailbreak",
+      "amount_usdc": 0.02
+    },
     {
       "service": "webhook",
       "timestamp": "2026-10-04 05:00:00",
@@ -128,32 +137,32 @@
       "verdict": "COMMIT",
       "route": "/evaluate/jailbreak",
       "amount_usdc": 0.02
-    },
-    {
-      "service": "webhook",
-      "timestamp": "2026-10-02 02:37:20",
-      "agent_id": "dcl-guard",
-      "task_type": "http_side_effect",
-      "verdict": "COMMIT",
-      "route": "/evaluate/fast",
-      "amount_usdc": 0.01
     }
   ],
   "services": {
     "webhook": {
       "available": true,
-      "total_audits": 35,
-      "commit_count": 30,
+      "total_audits": 36,
+      "commit_count": 31,
       "no_commit_count": 5,
       "unique_agents": 10,
-      "usdc_protected": 0.41,
+      "usdc_protected": 0.43,
       "network_distribution": [
         {
           "network": "base",
-          "count": 23
+          "count": 24
         }
       ],
       "recent_events": [
+        {
+          "service": "webhook",
+          "timestamp": "2026-10-04 09:01:39",
+          "agent_id": "fronesis",
+          "task_type": "post",
+          "verdict": "COMMIT",
+          "route": "/evaluate/jailbreak",
+          "amount_usdc": 0.02
+        },
         {
           "service": "webhook",
           "timestamp": "2026-10-04 05:00:00",
@@ -279,15 +288,6 @@
           "verdict": "COMMIT",
           "route": "/evaluate/jailbreak",
           "amount_usdc": 0.02
-        },
-        {
-          "service": "webhook",
-          "timestamp": "2026-10-02 02:37:20",
-          "agent_id": "dcl-guard",
-          "task_type": "http_side_effect",
-          "verdict": "COMMIT",
-          "route": "/evaluate/fast",
-          "amount_usdc": 0.01
         }
       ]
     },
