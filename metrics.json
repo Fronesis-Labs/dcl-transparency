@@ -1,8 +1,17 @@
 {
-  "generated_at": "2026-10-04T17:00:01+00:00",
-  "total_audits": 107,
-  "total_usdc_protected": 1.21,
+  "generated_at": "2026-10-04T17:15:02+00:00",
+  "total_audits": 108,
+  "total_usdc_protected": 1.23,
   "recent_events": [
+    {
+      "service": "webhook",
+      "timestamp": "2026-10-04 17:04:37",
+      "agent_id": "fronesis",
+      "task_type": "post",
+      "verdict": "COMMIT",
+      "route": "/evaluate/jailbreak",
+      "amount_usdc": 0.02
+    },
     {
       "service": "webhook",
       "timestamp": "2026-10-04 13:03:24",
@@ -128,32 +137,32 @@
       "verdict": "NO_COMMIT",
       "route": "/evaluate/fast",
       "amount_usdc": 0.01
-    },
-    {
-      "service": "webhook",
-      "timestamp": "2026-10-02 06:45:23",
-      "agent_id": "dcl-guard",
-      "task_type": "http_side_effect",
-      "verdict": "COMMIT",
-      "route": "/evaluate/fast",
-      "amount_usdc": 0.01
     }
   ],
   "services": {
     "webhook": {
       "available": true,
-      "total_audits": 37,
-      "commit_count": 32,
+      "total_audits": 38,
+      "commit_count": 33,
       "no_commit_count": 5,
       "unique_agents": 10,
-      "usdc_protected": 0.45,
+      "usdc_protected": 0.47,
       "network_distribution": [
         {
           "network": "base",
-          "count": 25
+          "count": 26
         }
       ],
       "recent_events": [
+        {
+          "service": "webhook",
+          "timestamp": "2026-10-04 17:04:37",
+          "agent_id": "fronesis",
+          "task_type": "post",
+          "verdict": "COMMIT",
+          "route": "/evaluate/jailbreak",
+          "amount_usdc": 0.02
+        },
         {
           "service": "webhook",
           "timestamp": "2026-10-04 13:03:24",
@@ -277,15 +286,6 @@
           "agent_id": "dcl-guard",
           "task_type": "http_side_effect",
           "verdict": "NO_COMMIT",
-          "route": "/evaluate/fast",
-          "amount_usdc": 0.01
-        },
-        {
-          "service": "webhook",
-          "timestamp": "2026-10-02 06:45:23",
-          "agent_id": "dcl-guard",
-          "task_type": "http_side_effect",
-          "verdict": "COMMIT",
           "route": "/evaluate/fast",
           "amount_usdc": 0.01
         }
