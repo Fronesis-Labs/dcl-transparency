@@ -1,8 +1,17 @@
 {
-  "generated_at": "2026-10-04T04:45:01+00:00",
-  "total_audits": 104,
-  "total_usdc_protected": 1.15,
+  "generated_at": "2026-10-04T05:00:02+00:00",
+  "total_audits": 105,
+  "total_usdc_protected": 1.17,
   "recent_events": [
+    {
+      "service": "webhook",
+      "timestamp": "2026-10-04 05:00:00",
+      "agent_id": "fronesis",
+      "task_type": "post",
+      "verdict": "COMMIT",
+      "route": "/evaluate/jailbreak",
+      "amount_usdc": 0.02
+    },
     {
       "service": "webhook",
       "timestamp": "2026-10-04 00:56:15",
@@ -128,32 +137,32 @@
       "verdict": "COMMIT",
       "route": "/evaluate/fast",
       "amount_usdc": 0.01
-    },
-    {
-      "service": "bazaar",
-      "timestamp": "2026-10-02 02:17:19",
-      "agent_id": "agent-123",
-      "task_type": "safety",
-      "verdict": "NO_COMMIT",
-      "route": "/evaluate/safety",
-      "amount_usdc": 0.01
     }
   ],
   "services": {
     "webhook": {
       "available": true,
-      "total_audits": 34,
-      "commit_count": 29,
+      "total_audits": 35,
+      "commit_count": 30,
       "no_commit_count": 5,
       "unique_agents": 10,
-      "usdc_protected": 0.39,
+      "usdc_protected": 0.41,
       "network_distribution": [
         {
           "network": "base",
-          "count": 22
+          "count": 23
         }
       ],
       "recent_events": [
+        {
+          "service": "webhook",
+          "timestamp": "2026-10-04 05:00:00",
+          "agent_id": "fronesis",
+          "task_type": "post",
+          "verdict": "COMMIT",
+          "route": "/evaluate/jailbreak",
+          "amount_usdc": 0.02
+        },
         {
           "service": "webhook",
           "timestamp": "2026-10-04 00:56:15",
@@ -279,15 +288,6 @@
           "verdict": "COMMIT",
           "route": "/evaluate/fast",
           "amount_usdc": 0.01
-        },
-        {
-          "service": "webhook",
-          "timestamp": "2026-10-02 00:40:26",
-          "agent_id": "fronesis",
-          "task_type": "post",
-          "verdict": "COMMIT",
-          "route": "/evaluate/jailbreak",
-          "amount_usdc": 0.02
         }
       ]
     },
