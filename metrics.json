@@ -1,8 +1,17 @@
 {
-  "generated_at": "2026-10-05T06:00:02+00:00",
-  "total_audits": 111,
-  "total_usdc_protected": 1.29,
+  "generated_at": "2026-10-05T06:15:01+00:00",
+  "total_audits": 112,
+  "total_usdc_protected": 1.31,
   "recent_events": [
+    {
+      "service": "bazaar",
+      "timestamp": "2026-10-05 06:02:17",
+      "agent_id": "agent-123",
+      "task_type": "jailbreak",
+      "verdict": "COMMIT",
+      "route": "/evaluate/jailbreak",
+      "amount_usdc": 0.02
+    },
     {
       "service": "webhook",
       "timestamp": "2026-10-05 05:08:16",
@@ -123,15 +132,6 @@
     {
       "service": "webhook",
       "timestamp": "2026-10-03 00:48:56",
-      "agent_id": "fronesis",
-      "task_type": "post",
-      "verdict": "COMMIT",
-      "route": "/evaluate/jailbreak",
-      "amount_usdc": 0.02
-    },
-    {
-      "service": "webhook",
-      "timestamp": "2026-10-02 20:47:54",
       "agent_id": "fronesis",
       "task_type": "post",
       "verdict": "COMMIT",
@@ -293,18 +293,27 @@
     },
     "bazaar": {
       "available": true,
-      "total_audits": 70,
-      "commit_count": 59,
+      "total_audits": 71,
+      "commit_count": 60,
       "no_commit_count": 11,
       "unique_agents": 6,
-      "usdc_protected": 0.76,
+      "usdc_protected": 0.78,
       "network_distribution": [
         {
           "network": "eip155:8453",
-          "count": 36
+          "count": 37
         }
       ],
       "recent_events": [
+        {
+          "service": "bazaar",
+          "timestamp": "2026-10-05 06:02:17",
+          "agent_id": "agent-123",
+          "task_type": "jailbreak",
+          "verdict": "COMMIT",
+          "route": "/evaluate/jailbreak",
+          "amount_usdc": 0.02
+        },
         {
           "service": "bazaar",
           "timestamp": "2026-10-02 02:17:19",
@@ -430,15 +439,6 @@
           "verdict": "COMMIT",
           "route": "/evaluate/quality",
           "amount_usdc": 0.03
-        },
-        {
-          "service": "bazaar",
-          "timestamp": "2026-09-30 15:05:54",
-          "agent_id": "bazaar-payment-probe",
-          "task_type": "safety",
-          "verdict": "COMMIT",
-          "route": "/evaluate/safety",
-          "amount_usdc": 0.01
         }
       ]
     },
