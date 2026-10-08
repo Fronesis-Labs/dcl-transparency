@@ -1,8 +1,17 @@
 {
-  "generated_at": "2026-10-08T21:00:02+00:00",
-  "total_audits": 130,
-  "total_usdc_protected": 1.69,
+  "generated_at": "2026-10-08T21:15:06+00:00",
+  "total_audits": 131,
+  "total_usdc_protected": 1.7,
   "recent_events": [
+    {
+      "service": "bazaar",
+      "timestamp": "2026-10-08 21:05:48",
+      "agent_id": "agent-123",
+      "task_type": "fast",
+      "verdict": "COMMIT",
+      "route": "/evaluate/fast",
+      "amount_usdc": 0.01
+    },
     {
       "service": "bazaar",
       "timestamp": "2026-10-08 05:33:40",
@@ -123,15 +132,6 @@
     {
       "service": "webhook",
       "timestamp": "2026-10-06 00:03:37",
-      "agent_id": "fronesis",
-      "task_type": "post",
-      "verdict": "COMMIT",
-      "route": "/evaluate/jailbreak",
-      "amount_usdc": 0.02
-    },
-    {
-      "service": "webhook",
-      "timestamp": "2026-10-05 20:02:24",
       "agent_id": "fronesis",
       "task_type": "post",
       "verdict": "COMMIT",
@@ -293,18 +293,27 @@
     },
     "bazaar": {
       "available": true,
-      "total_audits": 75,
-      "commit_count": 63,
+      "total_audits": 76,
+      "commit_count": 64,
       "no_commit_count": 12,
       "unique_agents": 6,
-      "usdc_protected": 0.88,
+      "usdc_protected": 0.89,
       "network_distribution": [
         {
           "network": "eip155:8453",
-          "count": 41
+          "count": 42
         }
       ],
       "recent_events": [
+        {
+          "service": "bazaar",
+          "timestamp": "2026-10-08 21:05:48",
+          "agent_id": "agent-123",
+          "task_type": "fast",
+          "verdict": "COMMIT",
+          "route": "/evaluate/fast",
+          "amount_usdc": 0.01
+        },
         {
           "service": "bazaar",
           "timestamp": "2026-10-08 05:33:40",
@@ -430,15 +439,6 @@
           "verdict": "COMMIT",
           "route": "/evaluate/pii",
           "amount_usdc": 0.02
-        },
-        {
-          "service": "bazaar",
-          "timestamp": "2026-10-01 01:22:37",
-          "agent_id": "bazaar-discovery-reindex",
-          "task_type": "unknown",
-          "verdict": "COMMIT",
-          "route": "/evaluate/secrets",
-          "amount_usdc": 0.02
         }
       ]
     },
@@ -458,8 +458,28 @@
   },
   "canonical_audit_events": {
     "available": true,
-    "total": 13,
+    "total": 14,
     "events": [
+      {
+        "schema_version": "1.0",
+        "event_id": "evt_4c1718462e014181b55ae1ac68111cf8",
+        "event_type": "dcl.audit.evaluated",
+        "timestamp": "2026-10-08T21:05:48.296+00:00",
+        "service": "dcl-trust-oracle",
+        "producer": "bazaar",
+        "route": "/evaluate/fast",
+        "agent_id": "agent-123",
+        "identity_source": "caller_supplied",
+        "identity_confidence": "unverified",
+        "trace_id": "tr_d5c556bd01604c46be2c995b6eca78a2",
+        "task_type": "fast",
+        "policy_id": "default",
+        "policy_version": "1.0.0",
+        "verdict": "COMMIT",
+        "proof": {
+          "tx_hash": "0xc918b16341a13939ec0068352841aae6706adf0bf9465685eb112e8ad46bcd60"
+        }
+      },
       {
         "schema_version": "1.0",
         "event_id": "evt_6eefbb4339ee41e6bc1deb6fe4f00b1d",
