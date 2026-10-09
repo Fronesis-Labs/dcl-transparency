@@ -1,8 +1,17 @@
 {
-  "generated_at": "2026-10-09T09:45:01+00:00",
-  "total_audits": 132,
-  "total_usdc_protected": 1.71,
+  "generated_at": "2026-10-09T10:00:02+00:00",
+  "total_audits": 133,
+  "total_usdc_protected": 1.72,
   "recent_events": [
+    {
+      "service": "bazaar",
+      "timestamp": "2026-10-09 09:57:52",
+      "agent_id": "dcl-guard",
+      "task_type": "http_side_effect",
+      "verdict": "COMMIT",
+      "route": "/evaluate/fast",
+      "amount_usdc": 0.01
+    },
     {
       "service": "bazaar",
       "timestamp": "2026-10-09 09:10:12",
@@ -123,15 +132,6 @@
     {
       "service": "webhook",
       "timestamp": "2026-10-06 12:06:36",
-      "agent_id": "fronesis",
-      "task_type": "post",
-      "verdict": "COMMIT",
-      "route": "/evaluate/jailbreak",
-      "amount_usdc": 0.02
-    },
-    {
-      "service": "webhook",
-      "timestamp": "2026-10-06 04:05:03",
       "agent_id": "fronesis",
       "task_type": "post",
       "verdict": "COMMIT",
@@ -293,18 +293,27 @@
     },
     "bazaar": {
       "available": true,
-      "total_audits": 77,
-      "commit_count": 65,
+      "total_audits": 78,
+      "commit_count": 66,
       "no_commit_count": 12,
-      "unique_agents": 6,
-      "usdc_protected": 0.9,
+      "unique_agents": 7,
+      "usdc_protected": 0.91,
       "network_distribution": [
         {
           "network": "eip155:8453",
-          "count": 43
+          "count": 44
         }
       ],
       "recent_events": [
+        {
+          "service": "bazaar",
+          "timestamp": "2026-10-09 09:57:52",
+          "agent_id": "dcl-guard",
+          "task_type": "http_side_effect",
+          "verdict": "COMMIT",
+          "route": "/evaluate/fast",
+          "amount_usdc": 0.01
+        },
         {
           "service": "bazaar",
           "timestamp": "2026-10-09 09:10:12",
@@ -430,15 +439,6 @@
           "verdict": "COMMIT",
           "route": "/evaluate/strict",
           "amount_usdc": 0.05
-        },
-        {
-          "service": "bazaar",
-          "timestamp": "2026-10-01 01:41:37",
-          "agent_id": "bazaar-discovery-reindex",
-          "task_type": "batch_item",
-          "verdict": "COMMIT",
-          "route": "/evaluate/batch",
-          "amount_usdc": 0.1
         }
       ]
     },
@@ -458,8 +458,28 @@
   },
   "canonical_audit_events": {
     "available": true,
-    "total": 15,
+    "total": 16,
     "events": [
+      {
+        "schema_version": "1.0",
+        "event_id": "evt_18b838295bf145c2a51ea03831b34d82",
+        "event_type": "dcl.audit.evaluated",
+        "timestamp": "2026-10-09T09:57:52.266+00:00",
+        "service": "dcl-trust-oracle",
+        "producer": "bazaar",
+        "route": "/evaluate/fast",
+        "agent_id": "dcl-guard",
+        "identity_source": "caller_supplied",
+        "identity_confidence": "unverified",
+        "trace_id": "tr_3d392de0041545f692c0130ba2552b5a",
+        "task_type": "http_side_effect",
+        "policy_id": "default",
+        "policy_version": "1.0.0",
+        "verdict": "COMMIT",
+        "proof": {
+          "tx_hash": "0xb3ed861a91cfdaf839aee4719e34b0d95a2a518f5c5d93f66ee27e32475796fa"
+        }
+      },
       {
         "schema_version": "1.0",
         "event_id": "evt_410230b97a1d40db992834c12a063332",
