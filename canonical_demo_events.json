@@ -1,0 +1,34 @@
+{
+  "events": [
+    {
+      "schema_version": "1.0",
+      "event_id": "evt_fbb095c1d78843c88e175f685a797707",
+      "event_type": "dcl.audit.evaluated",
+      "timestamp": "2026-09-24T14:07:28.625+00:00",
+      "service": "x402-identity-guard",
+      "producer": "shasta-dcl-demo",
+      "route": "examples/shasta_dcl_demo.py",
+      "agent_id": "1:36",
+      "identity_source": "trc8004_registry_read",
+      "identity_confidence": "unverified",
+      "trace_id": "tr_32fcaecb8e9e40279cc483a6647f34b8",
+      "task_type": "shasta_demo",
+      "policy_id": "default",
+      "policy_version": "1.0.0",
+      "verdict": "COMMIT",
+      "proof": {
+        "tx_hash": "0xbaf139a05761139f757ddeb3c9175921f6583803f698e040abe580035adf6294",
+        "chain_index": 0
+      },
+      "integration": {
+        "name": "x402-identity-guard",
+        "network": "shasta"
+      },
+      "metadata": {
+        "identity_status": "FLAG",
+        "identity_reason": "known_but_untrusted",
+        "note": "identity_confidence records a TRC-8004 registry read only; the caller was not authenticated"
+      }
+    }
+  ]
+}
