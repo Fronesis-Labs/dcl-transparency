@@ -2,404 +2,1034 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>DCL Transparency Board</title>
+<meta name="description" content="Public evidence board for DCL: security decisions, payment records, and the status of planned authorization and execution evidence." />
 <style>
   :root {
-    --bg: #0e1117; --panel: #161b22; --border: #262c36;
-    --text: #e6edf3; --muted: #8b949e;
-    --accent: #00ffa3; --warn: #ffc107; --danger: #ff4d5e;
+    --graphite: #15181b;
+    --graphite-2: #1e2327;
+    --graphite-line: #384047;
+    --on-graphite: #ecebe6;
+    --on-graphite-muted: #a3abb0;
+
+    --ivory: #f5f3ed;
+    --surface: #fbfaf6;
+    --line: #dcd8cb;
+    --line-strong: #b9b4a4;
+    --ink: #1d2124;
+    --muted: #596166;
+
+    --sage: #2f5d3f;      --sage-bg: #e0eae0;  --sage-line: #a9c2ac;
+    --amber: #7a4e08;     --amber-bg: #f5e8cb; --amber-line: #dcc088;
+    --red: #8f2a1f;       --red-bg: #f4dcd7;   --red-line: #d9a9a1;
+    --grey: #4b5256;      --grey-bg: #e8e5db;  --grey-line: #c9c4b4;
+
+    --sans: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Roboto, Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    --wrap: 1120px;
+    color-scheme: light;
   }
-  * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--text);
-    font-family: -apple-system, "Segoe UI", Roboto, sans-serif; padding: 32px 24px 64px; }
-  h1 { margin: 0 0 4px; font-size: 22px; }
-  h2 { font-size: 14px; margin: 0 0 14px; color: var(--muted); font-weight: 600;
-    text-transform: uppercase; letter-spacing: 0.04em; }
-  .sub { color: var(--muted); font-size: 13px; margin-bottom: 28px; }
-  .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 14px; margin-bottom: 28px; }
-  .kpi { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; }
-  .kpi .label { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
-  .kpi .value { font-size: 26px; font-weight: 600; color: var(--accent); margin-top: 6px; }
-  .services-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 16px; margin-bottom: 28px; }
-  .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 18px;
-    min-width: 0; max-width: 100%; }
-  .service-stat { font-size: 13px; color: var(--muted); margin: 3px 0; }
-  .service-stat b { color: var(--text); }
-  .placeholder { color: var(--muted); font-size: 13px; line-height: 1.5; }
-  .feed-meta { color: var(--muted); font-size: 13px; margin: -4px 0 12px; line-height: 1.5; }
-  .table-scroll { width: 100%; max-width: 100%; overflow-x: auto; }
-  table { width: max-content; min-width: 100%; border-collapse: collapse; font-size: 13px; }
-  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
-  th { color: var(--muted); font-weight: 500; }
-  .verdict-COMMIT { color: var(--accent); }
-  .verdict-NO_COMMIT { color: var(--danger); }
-  .badge { display: inline-block; padding: 1px 7px; border-radius: 999px; font-size: 11px;
-    background: #21262d; color: var(--muted); }
-  .canonical-panel { margin-top: 28px; }
-  details summary { cursor: pointer; color: var(--muted); font-size: 12px; }
-  details .service-stat { margin-top: 6px; word-break: break-all; }
-  td.payment-tx { word-break: break-all; max-width: 220px; }
-  details.fold { border: 1px solid var(--border); border-radius: 8px; margin: 8px 0; background: #12171e; }
-  details.fold:not([open]) > .fold-body { display: none; }
-  details.fold > summary { cursor: pointer; padding: 10px 12px; color: var(--text); font-size: 13px; }
-  details.fold > summary::before { content: "▸  "; color: var(--accent); }
-  details.fold[open] > summary::before { content: "▾  "; }
-  details.day-fold { margin-left: 10px; }
-  details.fold > .fold-body { padding: 0 8px 10px; }
-  .load-older { margin-top: 14px; background: transparent; color: var(--accent);
-    border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; cursor: pointer; font-size: 13px; }
-  .load-older:disabled { color: var(--muted); cursor: progress; }
-  footer { margin-top: 32px; color: var(--muted); font-size: 12px; }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 12px; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body { margin: 0; background: var(--ivory); color: var(--ink); font-family: var(--sans);
+    font-size: 15px; line-height: 1.55; -webkit-text-size-adjust: 100%; }
+  a { color: inherit; text-underline-offset: 3px; }
+  :focus-visible { outline: 2px solid #2c6e8f; outline-offset: 2px; }
+  .wrap { width: 100%; max-width: var(--wrap); margin: 0 auto; padding: 0 20px; }
+  .mono { font-family: var(--mono); font-size: 0.86em; word-break: break-all; }
+  .skip { position: absolute; left: -999px; top: 8px; background: var(--ivory); color: var(--ink);
+    padding: 8px 12px; z-index: 10; }
+  .skip:focus { left: 8px; }
+
+  /* ---------- hero ---------- */
+  .hero { background: var(--graphite); color: var(--on-graphite); }
+  .topbar { display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: center; justify-content: space-between;
+    padding: 18px 0; border-bottom: 1px solid var(--graphite-line); }
+  .brand { font-size: 13px; letter-spacing: 0.14em; font-weight: 600; margin: 0; }
+  .topbar nav { display: flex; flex-wrap: wrap; gap: 4px 20px; font-size: 14px; }
+  .topbar nav a { color: var(--on-graphite-muted); text-decoration: none; padding: 4px 0; }
+  .topbar nav a:hover { color: var(--on-graphite); text-decoration: underline; }
+  .hero-main { padding: 64px 0 40px; }
+  .hero h1 { font-size: clamp(2.2rem, 6vw, 4.4rem); line-height: 1.05; font-weight: 650;
+    letter-spacing: -0.025em; margin: 0 0 20px; }
+  .hero h1 span { display: block; }
+  .hero .lede { font-size: clamp(1.02rem, 1.8vw, 1.2rem); color: var(--on-graphite-muted); max-width: 46ch; margin: 0 0 28px; }
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+  .btn { display: inline-block; padding: 11px 18px; border-radius: 3px; font-weight: 600; font-size: 15px;
+    text-decoration: none; border: 1px solid transparent; cursor: pointer; font-family: inherit; }
+  .btn-primary { background: var(--ivory); color: var(--graphite); }
+  .btn-primary:hover { background: #fff; }
+  .btn-secondary { border-color: var(--graphite-line); color: var(--on-graphite); background: transparent; }
+  .btn-secondary:hover { border-color: var(--on-graphite-muted); }
+  .btn-quiet { background: var(--surface); color: var(--ink); border-color: var(--line-strong); }
+  .btn-quiet:hover { background: #fff; }
+
+  .chain { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--graphite-line); }
+  .chain li { padding: 18px 20px 22px 0; }
+  .chain li + li { padding-left: 20px; border-left: 1px solid var(--graphite-line); }
+  .chain h2 { font-size: 15px; margin: 0 0 8px; font-weight: 600; }
+  .chain p { margin: 8px 0 0; font-size: 13px; color: var(--on-graphite-muted); max-width: 30ch; }
+  .fresh { font-size: 13px; color: var(--on-graphite-muted); padding: 14px 0 18px; border-top: 1px solid var(--graphite-line); margin: 0; }
+  .fresh strong { color: var(--on-graphite); font-weight: 600; }
+
+  /* ---------- badges ---------- */
+  .badge { display: inline-block; font-size: 12px; font-weight: 600; line-height: 1.3; padding: 2px 8px;
+    border-radius: 3px; border: 1px solid; white-space: nowrap; }
+  .b-sage  { color: var(--sage);  background: var(--sage-bg);  border-color: var(--sage-line); }
+  .b-amber { color: var(--amber); background: var(--amber-bg); border-color: var(--amber-line); }
+  .b-red   { color: var(--red);   background: var(--red-bg);   border-color: var(--red-line); }
+  .b-grey  { color: var(--grey);  background: var(--grey-bg);  border-color: var(--grey-line); }
+  .b-plan  { color: var(--grey); background: transparent; border-style: dashed; border-color: var(--line-strong); }
+  .hero .b-grey { background: transparent; color: var(--on-graphite); border-color: var(--on-graphite-muted); }
+  .hero .b-plan { color: var(--on-graphite-muted); border-color: var(--graphite-line); border-style: dashed; }
+
+  /* ---------- banners ---------- */
+  #banners:empty { display: none; }
+  .banner { margin: 16px 0 0; padding: 10px 14px; border-left: 4px solid; font-size: 14px; border-radius: 0 3px 3px 0; }
+  .banner.amber { background: var(--amber-bg); border-color: var(--amber); color: #3f2803; }
+  .banner.red { background: var(--red-bg); border-color: var(--red); color: #55150e; }
+  .banner.grey { background: var(--grey-bg); border-color: var(--grey); color: var(--ink); }
+
+  /* ---------- metrics ---------- */
+  .metrics { display: grid; grid-template-columns: repeat(4, 1fr); margin: 24px 0 0; border-top: 2px solid var(--ink);
+    border-bottom: 1px solid var(--line-strong); }
+  .metric { padding: 16px 18px 18px 0; min-width: 0; }
+  .metric + .metric { padding-left: 18px; border-left: 1px solid var(--line); }
+  .metric .m-label { font-size: 13px; color: var(--muted); margin: 0 0 4px; font-weight: 600; }
+  .metric .m-value { font-size: 2rem; line-height: 1.15; font-weight: 650; letter-spacing: -0.01em;
+    font-variant-numeric: tabular-nums; margin: 0; }
+  .metric .m-value.off { font-size: 1.2rem; color: var(--grey); padding: 6px 0; }
+  .metric .m-note { font-size: 12.5px; color: var(--muted); margin: 6px 0 0; }
+  .metric .m-flag { margin: 8px 0 0; }
+
+  /* ---------- sections ---------- */
+  main section { padding: 52px 0 8px; }
+  main h2 { font-size: 1.55rem; line-height: 1.2; letter-spacing: -0.01em; margin: 0 0 8px; font-weight: 650; }
+  main h3 { font-size: 1.02rem; margin: 28px 0 8px; font-weight: 650; }
+  .intro { max-width: 68ch; color: var(--ink); margin: 0 0 20px; }
+  .muted { color: var(--muted); }
+  .small { font-size: 13px; }
+
+  table.plain { width: 100%; border-collapse: collapse; font-size: 14px; }
+  table.plain caption { text-align: left; font-weight: 650; padding: 0 0 8px; }
+  table.plain th, table.plain td { text-align: left; padding: 9px 12px 9px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  table.plain th { font-weight: 600; color: var(--muted); font-size: 13px; border-bottom-color: var(--line-strong); }
+  table.plain td.num, table.plain th.num { text-align: right; font-variant-numeric: tabular-nums; padding-right: 18px; }
+  .scroll-x { overflow-x: auto; max-width: 100%; }
+
+  dl.defs { margin: 0; display: grid; grid-template-columns: minmax(150px, 220px) 1fr; gap: 0; }
+  dl.defs dt, dl.defs dd { margin: 0; padding: 9px 0; border-bottom: 1px solid var(--line); }
+  dl.defs dt { font-weight: 600; padding-right: 16px; }
+  dl.defs dd { max-width: 70ch; }
+
+  /* ---------- explorer ---------- */
+  .filters { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; align-items: end; margin: 8px 0 14px; }
+  .filters .wide, .filters .span2 { grid-column: span 2; }
+  .filters .btn-wrap { justify-self: start; }
+  .field label { display: block; font-size: 12.5px; font-weight: 600; color: var(--muted); margin: 0 0 4px; }
+  .field input, .field select { width: 100%; font: inherit; font-size: 14px; color: var(--ink); background: var(--surface);
+    border: 1px solid var(--line-strong); border-radius: 3px; padding: 8px 9px; min-height: 38px; }
+  .field input::placeholder { color: #7b8286; }
+  .filters .btn { min-height: 38px; padding: 7px 14px; }
+  .result-meta { font-size: 13px; color: var(--muted); margin: 0 0 10px; min-height: 1.5em; }
+
+  .ev-head, .ev > summary { display: grid; gap: 4px 14px; align-items: center;
+    grid-template-columns: 10.5rem 6.4rem minmax(6rem, 1fr) minmax(9rem, 1.5fr) 7rem 9.5rem; }
+  .ev-head { padding: 8px 12px 8px 30px; font-size: 12.5px; font-weight: 600; color: var(--muted);
+    border-bottom: 1px solid var(--line-strong); }
+  ol.ev-list { list-style: none; margin: 0; padding: 0; }
+  .ev { border-bottom: 1px solid var(--line); background: transparent; }
+  .ev[open] { background: var(--surface); border-bottom-color: var(--line-strong); }
+  .ev > summary { list-style: none; cursor: pointer; padding: 11px 12px 11px 30px; position: relative; font-size: 14px; }
+  .ev > summary::-webkit-details-marker { display: none; }
+  .ev > summary::before { content: ""; position: absolute; left: 12px; top: 50%; width: 6px; height: 6px;
+    border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: translateY(-65%) rotate(-45deg); }
+  .ev[open] > summary::before { transform: translateY(-80%) rotate(45deg); }
+  .ev > summary:hover { background: rgba(0,0,0,0.03); }
+  .c-time { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .c-agent, .act-main { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; display: block; }
+  .c-act { min-width: 0; }
+  .act-sub { display: block; font-size: 12.5px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .c-pay { font-variant-numeric: tabular-nums; }
+  .c-pay small, .c-src small { display: block; color: var(--muted); font-size: 12.5px; }
+  .c-src .chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 3px; }
+
+  .detail { padding: 6px 12px 18px 30px; }
+  .notice { margin: 8px 0 12px; padding: 8px 12px; font-size: 13.5px; border-left: 4px solid; border-radius: 0 3px 3px 0; }
+  .notice.amber { background: var(--amber-bg); border-color: var(--amber); color: #3f2803; }
+  .panels { display: grid; grid-template-columns: 1.3fr 1fr; gap: 0 28px; }
+  .panel { border-top: 2px solid var(--ink); padding: 10px 0 14px; min-width: 0; }
+  .panel.full { grid-column: 1 / -1; }
+  .panel header { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; margin-bottom: 6px; }
+  .panel h4 { margin: 0; font-size: 15px; font-weight: 650; }
+  .panel p { margin: 6px 0; font-size: 13.5px; max-width: 64ch; }
+  .panel dl { margin: 6px 0 0; display: grid; grid-template-columns: minmax(110px, 150px) 1fr; font-size: 13.5px; }
+  .panel dt, .panel dd { margin: 0; padding: 5px 0; border-bottom: 1px solid var(--line); min-width: 0; }
+  .panel dt { color: var(--muted); padding-right: 12px; }
+  .panel dd { overflow-wrap: anywhere; }
+  .panel .cap { color: var(--muted); font-size: 12.5px; }
+  .missing { color: var(--muted); font-size: 13px; margin: 8px 0 0; }
+  .raw { margin-top: 12px; }
+  .raw > summary { cursor: pointer; font-size: 13.5px; font-weight: 600; padding: 4px 0; }
+  pre.json { margin: 8px 0 0; padding: 12px; background: var(--graphite); color: var(--on-graphite); font-family: var(--mono);
+    font-size: 12.5px; line-height: 1.5; overflow-x: auto; border-radius: 3px; max-height: 360px; }
+  .more { margin: 18px 0 0; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .empty { padding: 28px 0; color: var(--muted); }
+  .empty strong { color: var(--ink); display: block; margin-bottom: 4px; }
+
+  /* ---------- architecture ---------- */
+  ol.flow { list-style: none; counter-reset: step; margin: 0 0 8px; padding: 0; border-top: 2px solid var(--ink); }
+  ol.flow li { counter-increment: step; display: grid; grid-template-columns: 2.2rem 1fr auto; gap: 4px 12px; padding: 11px 0;
+    border-bottom: 1px solid var(--line); align-items: start; }
+  ol.flow li::before { content: counter(step); color: var(--muted); font-variant-numeric: tabular-nums; font-weight: 600; }
+  ol.flow li span.step-text { max-width: 62ch; }
+  ol.flow li.planned span.step-text { color: var(--muted); }
+
+  .planned-box { border: 1px dashed var(--line-strong); padding: 4px 18px 16px; margin: 0 0 22px; background: transparent; }
+  .planned-box header { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin: 14px 0 4px; }
+  .planned-box h3 { margin: 0; }
+  .planned-box dl.defs dd { color: var(--muted); }
+
+  footer { margin-top: 64px; background: var(--graphite); color: var(--on-graphite-muted); font-size: 13px; padding: 24px 0 32px; }
+  footer a { color: var(--on-graphite); }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 960px) {
+    .filters { grid-template-columns: repeat(3, 1fr); }
+    .filters .wide { grid-column: 1 / -1; }
+    .filters .span2 { grid-column: auto; }
+    .filters .btn-wrap { grid-column: 1 / -1; }
+    .metrics { grid-template-columns: repeat(2, 1fr); }
+    .metric:nth-child(3) { padding-left: 0; border-left: 0; }
+    .metric:nth-child(n+3) { border-top: 1px solid var(--line); }
+    .chain { grid-template-columns: repeat(2, 1fr); }
+    .chain li:nth-child(3) { padding-left: 0; border-left: 0; }
+    .chain li:nth-child(n+3) { border-top: 1px solid var(--graphite-line); }
+    .panels { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 940px) {
+    .ev-head { display: none; }
+    .ev > summary { grid-template-columns: 1fr auto; grid-template-areas: "time dec" "agent agent" "act pay" "src src"; padding-left: 30px; }
+    .c-time { grid-area: time; } .c-dec { grid-area: dec; justify-self: end; }
+    .c-agent { grid-area: agent; font-weight: 600; } .c-act { grid-area: act; } .c-pay { grid-area: pay; text-align: right; }
+    .c-src { grid-area: src; }
+    .c-src .chips { margin-top: 0; }
+  }
+  @media (max-width: 760px) {
+    .detail { padding-left: 12px; }
+    dl.defs { grid-template-columns: 1fr; }
+    dl.defs dt { border-bottom: 0; padding-bottom: 0; }
+    .panel dl { grid-template-columns: 1fr; }
+    .panel dt { border-bottom: 0; padding-bottom: 0; }
+    .hero-main { padding-top: 40px; }
+  }
+  @media (max-width: 560px) {
+    .filters { grid-template-columns: 1fr 1fr; }
+    .metrics { grid-template-columns: 1fr; }
+    .metric, .metric + .metric { padding-left: 0; border-left: 0; }
+    .metric + .metric { border-top: 1px solid var(--line); }
+    .chain { grid-template-columns: 1fr; }
+    .chain li, .chain li + li { padding-left: 0; border-left: 0; }
+    .chain li + li { border-top: 1px solid var(--graphite-line); }
+    .btn { width: 100%; text-align: center; }
+    ol.flow li { grid-template-columns: 1.8rem 1fr; }
+    ol.flow li .badge { grid-column: 2; justify-self: start; }
+  }
 </style>
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
 
-<h1>🛡️ DCL Transparency Board</h1>
-<div class="sub" id="generated-at">Loading…</div>
+<header class="hero">
+  <div class="wrap">
+    <div class="topbar">
+      <p class="brand">DCL / TRANSPARENCY BOARD</p>
+      <nav aria-label="Sections">
+        <a href="#overview">Overview</a>
+        <a href="#explorer">Evidence explorer</a>
+        <a href="#architecture">Verification architecture</a>
+        <a href="#planned">Planned</a>
+        <a href="#technical">Technical details</a>
+      </nav>
+    </div>
+    <div class="hero-main">
+      <h1><span>Don't trust the agent.</span> <span>Trust the proof.</span></h1>
+      <p class="lede">Inspect security decisions, payment evidence, authorizations, and execution outcomes.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="#explorer">Explore Audit Events</a>
+        <a class="btn btn-secondary" href="#architecture">Inspect Verification Architecture</a>
+      </div>
+    </div>
+    <ol class="chain" aria-label="Evidence layers and their status">
+      <li><h2>Decision</h2><span class="badge b-grey">Recorded</span><p>COMMIT or NO_COMMIT from the policy evaluation.</p></li>
+      <li><h2>Payment</h2><span class="badge b-grey">Recorded</span><p>x402 payment amounts and references attached to a decision.</p></li>
+      <li><h2>Proof of Allowance</h2><span class="badge b-plan">Planned</span><p>Signed, narrowly scoped authorization. Not implemented.</p></li>
+      <li><h2>Execution</h2><span class="badge b-plan">Planned</span><p>On-chain enforcement and its outcome. Not implemented.</p></li>
+    </ol>
+    <p class="fresh" id="fresh" aria-live="polite">Loading export status…</p>
+  </div>
+</header>
 
-<div class="kpi-row">
-  <div class="kpi"><div class="label">Total Audits</div><div class="value" id="kpi-audits">–</div></div>
-  <div class="kpi"><div class="label">USDC Protected</div><div class="value" id="kpi-usdc">–</div></div>
-</div>
+<main id="main">
+  <div class="wrap">
+    <div id="banners" aria-live="polite"></div>
 
-<div class="services-row" id="services"></div>
+    <div class="metrics" id="metrics" aria-busy="true">
+      <div class="metric"><p class="m-label">Audit Events</p><p class="m-value off">Loading…</p></div>
+      <div class="metric"><p class="m-label">Recorded Payments (USDC)</p><p class="m-value off">Loading…</p></div>
+      <div class="metric"><p class="m-label">Paid Verifications</p><p class="m-value off">Not shown</p></div>
+      <div class="metric"><p class="m-label">On-chain Executions</p><p class="m-value off">Not implemented</p></div>
+    </div>
 
-<div class="panel">
-  <h2>Live Audit Stream (all services)</h2>
-  <div id="feed"><div class="placeholder">Loading audit history…</div></div>
-</div>
+    <noscript><div class="banner red">This page reads <a href="metrics.json">metrics.json</a> and <a href="audit_history.json">audit_history.json</a> with JavaScript. Enable JavaScript or open those files directly.</div></noscript>
 
-<div class="panel canonical-panel">
-  <h2>Canonical Audit Events</h2>
-  <div id="canonical-feed"></div>
-</div>
+    <section id="overview" aria-labelledby="overview-h">
+      <h2 id="overview-h">Overview</h2>
+      <p class="intro">DCL evaluates AI-agent actions against a security policy and records each decision as an audit event. This Board publishes those records and the payment data attached to them. It shows what DCL exported; it does not verify the records itself.</p>
+      <div class="scroll-x"><table class="plain" id="services-table">
+        <caption>Counts by service, from the latest export</caption>
+        <thead><tr><th scope="col">Service</th><th scope="col" class="num">Audits</th><th scope="col" class="num">COMMIT</th><th scope="col" class="num">Not COMMIT</th><th scope="col" class="num">Agents</th><th scope="col" class="num">Payments (USDC)</th><th scope="col">Payment network</th></tr></thead>
+        <tbody><tr><td colspan="7" class="muted">Loading…</td></tr></tbody>
+      </table></div>
+      <h3>What each metric counts</h3>
+      <dl class="defs">
+        <dt>Audit Events</dt>
+        <dd>Rows in each service's audit chain (Trust Oracle, Bazaar) plus Sentinel events. Canonical events produced by integration demos (Shasta, Tenjin) come from outside those databases and are not included.</dd>
+        <dt>Recorded Payments (USDC)</dt>
+        <dd>Sum of the payment amounts attached to COMMIT audits for Trust Oracle and Bazaar, plus all Sentinel payments. Payments attached to audits whose verdict is not COMMIT are not included. Amounts are as recorded by each service; this Board does not check them against the chain.</dd>
+        <dt>Not COMMIT</dt>
+        <dd>The export's <span class="mono">no_commit_count</span>. In the exporter source it is calculated as total audits minus COMMIT audits, so it counts every verdict other than COMMIT. Only the row-level events below show the actual verdict value of each audit; Technical details lists the values seen.</dd>
+        <dt>Paid Verifications</dt>
+        <dd>Not shown. The export does not link every audit to a settled payment, so a count would not be reliable.</dd>
+        <dt>On-chain Executions</dt>
+        <dd>Not implemented. No execution evidence exists yet.</dd>
+      </dl>
+    </section>
 
-<footer>DCL Trust Oracle — data refreshes on each export cycle. Not real-time.</footer>
+    <section id="explorer" aria-labelledby="explorer-h">
+      <h2 id="explorer-h">Evidence explorer</h2>
+      <p class="intro">Each row is one audit event. Open a row to see the decision, payment, allowance, and execution evidence separately. The Board does not authenticate the caller and does not independently verify identity claims. Identity fields are shown as exported.</p>
+      <form class="filters" id="filters" role="search" aria-label="Filter audit events" onsubmit="return false">
+        <div class="field wide"><label for="f-q">Search</label><input id="f-q" type="search" placeholder="Agent, route, event ID, trace ID, hash" autocomplete="off" /></div>
+        <div class="field"><label for="f-verdict">Decision</label><select id="f-verdict"><option value="">All</option><option value="COMMIT">COMMIT</option><option value="NO_COMMIT">NO_COMMIT</option></select></div>
+        <div class="field"><label for="f-producer">Producer</label><select id="f-producer"><option value="">All</option></select></div>
+        <div class="field"><label for="f-evidence">Evidence</label><select id="f-evidence">
+          <option value="">All</option><option value="pay-amount">Payment amount recorded</option><option value="pay-tx">Payment transaction reference</option><option value="pay-none">No payment data exported</option><option value="v1">Audit Event v1.0 record</option><option value="test">Testnet or demo</option></select></div>
+        <div class="field"><label for="f-network">Network</label><select id="f-network"><option value="">All</option></select></div>
+        <div class="field span2"><label for="f-from">From (UTC)</label><input id="f-from" type="date" /></div>
+        <div class="field span2"><label for="f-to">To (UTC)</label><input id="f-to" type="date" /></div>
+        <div class="field btn-wrap span2"><button class="btn btn-quiet" type="button" id="f-reset">Reset filters</button></div>
+      </form>
+      <p class="result-meta" id="result-meta" role="status" aria-live="polite">Loading events…</p>
+      <div class="ev-head" aria-hidden="true"><span>Time (UTC)</span><span>Decision</span><span>Agent</span><span>Action</span><span>Payment</span><span>Record</span></div>
+      <ol class="ev-list" id="ev-list"><li class="empty">Loading events…</li></ol>
+      <div class="more" id="more" hidden>
+        <button class="btn btn-quiet" type="button" id="more-btn">Show 25 more</button>
+        <span class="small muted" id="more-note"></span>
+      </div>
+    </section>
+
+    <section id="architecture" aria-labelledby="arch-h">
+      <h2 id="arch-h">Verification architecture</h2>
+      <p class="intro">DCL connects a paid security evaluation to a recorded decision. The target design adds a signed authorization and an enforcement contract. Only the first three steps run today.</p>
+      <ol class="flow">
+        <li><span class="step-text">An AI agent requests a security evaluation.</span><span class="badge b-grey">Recorded</span></li>
+        <li><span class="step-text">The request is paid through x402. Amount and settlement reference are recorded where the export carries them.</span><span class="badge b-grey">Recorded</span></li>
+        <li><span class="step-text">The DCL Trust Oracle evaluates the action and records COMMIT or NO_COMMIT as an audit event (DCL Audit Event v1.0).</span><span class="badge b-grey">Recorded</span></li>
+        <li class="planned"><span class="step-text">An approved decision produces a signed, narrowly scoped Proof of Allowance.</span><span class="badge b-plan">Planned</span></li>
+        <li class="planned"><span class="step-text">A guarded smart contract verifies the allowance before running the protected action. Base is the intended first EVM environment.</span><span class="badge b-plan">Planned</span></li>
+        <li class="planned"><span class="step-text">The execution result is linked to its decision and payment evidence.</span><span class="badge b-plan">Planned</span></li>
+      </ol>
+
+      <h3>How evidence is labelled</h3>
+      <p class="muted small" style="max-width:68ch;margin-top:0">One status never stands in for the whole lifecycle. A recorded decision can exist without a verified payment, and a payment can exist without any allowance.</p>
+      <div class="scroll-x"><table class="plain">
+        <thead><tr><th scope="col">Status</th><th scope="col">Meaning</th><th scope="col">On this Board today</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge b-grey">Recorded</span></td><td>DCL stored the record and exported it.</td><td>Shown for every event.</td></tr>
+          <tr><td><span class="badge b-sage">Cryptographically verified</span></td><td>A hash or signature was recomputed and matched.</td><td>Not shown. The Board does not recompute hashes or signatures.</td></tr>
+          <tr><td><span class="badge b-sage">Payment confirmed</span></td><td>Settlement was checked against the chain.</td><td>Not shown. References are displayed with a block-explorer link; the Board does not check them.</td></tr>
+          <tr><td><span class="badge b-sage">Allowance signature verified</span></td><td>A Proof of Allowance signature was verified.</td><td>Not implemented.</td></tr>
+          <tr><td><span class="badge b-sage">Execution confirmed</span></td><td>A guarded contract executed the action on-chain.</td><td>Not implemented.</td></tr>
+          <tr><td><span class="badge b-red">Rejected</span></td><td>The evaluation returned NO_COMMIT.</td><td>Shown as NO_COMMIT, with the reason when exported.</td></tr>
+          <tr><td><span class="badge b-plan">Unavailable / Not implemented</span></td><td>A data source or feature does not exist yet.</td><td>Shown instead of a zero or a placeholder value.</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Two different hashes</h3>
+      <dl class="defs">
+        <dt>DCL audit hash</dt>
+        <dd>The <span class="mono">proof.tx_hash</span> field. A local hash of the audit record, computed by DCL. It is not a blockchain transaction and cannot be looked up on a chain.</dd>
+        <dt>Settlement transaction</dt>
+        <dd>The <span class="mono">payment.tx_hash</span> field. The on-chain transaction that settled an x402 payment. For Base it can be inspected on a block explorer.</dd>
+      </dl>
+    </section>
+
+    <section id="planned" aria-labelledby="planned-h">
+      <h2 id="planned-h">Planned: authorization and enforcement</h2>
+      <p class="intro">These sections describe evidence the Board will show once the Security Gas flow exists. No allowance or execution record exists today. Fields appear here only when real records back them.</p>
+
+      <div class="planned-box">
+        <header><h3>Proof of Allowance</h3><span class="badge b-plan">Planned</span></header>
+        <p class="small muted" style="margin:0 0 8px">A signed authorization for one specific action, issued after an approved decision.</p>
+        <dl class="defs">
+          <dt>Authorization status</dt><dd>Not available</dd>
+          <dt>Signer or trusted verifier</dt><dd>Not available</dd>
+          <dt>Action hash</dt><dd>Not available</dd>
+          <dt>Target or recipient</dt><dd>Not available</dd>
+          <dt>Policy hash</dt><dd>Not available</dd>
+          <dt>Expiry</dt><dd>Not available</dd>
+          <dt>Chain ID and verifying contract</dt><dd>Not available</dd>
+          <dt>Nonce / replay state</dt><dd>Not available</dd>
+          <dt>Signature verification result</dt><dd>Not available</dd>
+        </dl>
+      </div>
+
+      <div class="planned-box">
+        <header><h3>Execution evidence (on-chain enforcement)</h3><span class="badge b-plan">Planned</span></header>
+        <p class="small muted" style="margin:0 0 8px">The outcome of a guarded contract checking an allowance before executing. Base is the intended first environment.</p>
+        <dl class="defs">
+          <dt>Enforcement contract</dt><dd>Not available</dd>
+          <dt>Chain ID</dt><dd>Not available</dd>
+          <dt>Transaction hash</dt><dd>Not available</dd>
+          <dt>Execution result and confirmation</dt><dd>Not available</dd>
+          <dt>Rejection reason</dt><dd>Not available</dd>
+          <dt>Replay-rejection and parameter-mismatch tests</dt><dd>Not available</dd>
+        </dl>
+      </div>
+    </section>
+
+    <section id="technical" aria-labelledby="tech-h">
+      <h2 id="tech-h">Technical details</h2>
+      <p class="intro">What this page loaded, how rows were combined, and where the raw files are.</p>
+      <div id="diagnostics"><p class="muted">Loading…</p></div>
+      <h3>Raw data</h3>
+      <p class="small" style="max-width:68ch">
+        <a href="metrics.json">metrics.json</a> is the latest export and carries the counts and canonical events.
+        <a href="audit_history.json">audit_history.json</a> is the archive of earlier rows.
+        Event fields follow DCL Audit Event v1.0 (<span class="mono">dcl.audit.evaluated</span>); identifiers are shown as exported.
+      </p>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">DCL Trust Oracle by Fronesis Labs. Data is exported periodically, not streamed. Licensed under Apache-2.0.
+  Source: <a href="https://github.com/Fronesis-Labs/dcl-transparency">github.com/Fronesis-Labs/dcl-transparency</a>.</div>
+</footer>
 
 <script>
-const FLAT_LIMIT = 20;
-const DAY_CHUNK = 40;
+(function () {
+  'use strict';
 
-async function loadMetrics() {
-  const res = await fetch('./metrics.json', { cache: 'no-store' });
-  if (!res.ok) throw new Error('metrics.json not found');
-  return res.json();
-}
+  // ---- configuration ----
+  var FRESH_MINUTES = 45;      // export runs about every 15 minutes
+  var STALE_HOURS = 6;
+  var PAGE_SIZE = 25;
+  var MAX_EVENTS = 1000;       // hard bound on events kept in memory
+  var LINK_WINDOW_MS = 1500;   // legacy row <-> v1.0 event match window
 
-async function loadHistory() {
-  const res = await fetch('./audit_history.json', { cache: 'no-store' });
-  if (res.status === 404) return [];
-  if (!res.ok) throw new Error('audit history could not be loaded');
-  const body = await res.json();
-  if (Array.isArray(body)) return body;
-  if (body && Array.isArray(body.events)) return body.events;
-  return [];
-}
-
-function fmtUsdc(n) {
-  return '$' + Number(n).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}
-
-function renderServiceCard(name, label, data) {
-  if (!data || !data.available) {
-    return `
-      <div class="panel">
-        <h2>${label}</h2>
-        <div class="placeholder">${(data && data.note) || 'No data yet.'}</div>
-      </div>`;
+  // ---- helpers ----
+  function $(s, r) { return (r || document).querySelector(s); }
+  function esc(v) {
+    return String(v == null ? '' : v).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
-  if (name === 'sentinel') {
-    return `
-      <div class="panel">
-        <h2>${label}</h2>
-        <div class="service-stat">Events: <b>${data.total_events}</b></div>
-        <div class="service-stat">COMMIT / NO_COMMIT: <b>${data.commit_count}</b> / <b>${data.no_commit_count}</b></div>
-        <div class="service-stat">USDC collected: <b>${fmtUsdc(data.usdc_collected)}</b></div>
-      </div>`;
+  function has(v) { return v !== undefined && v !== null && v !== ''; }
+  function isObj(v) { return v !== null && typeof v === 'object' && !Array.isArray(v); }
+  function toNum(v) { if (!has(v)) return null; var n = Number(v); return isFinite(n) ? n : null; }
+  function fmtUsdc(n) {
+    return '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 });
   }
-  return `
-    <div class="panel">
-      <h2>${label}</h2>
-      <div class="service-stat">Audits: <b>${data.total_audits}</b></div>
-      <div class="service-stat">COMMIT / NO_COMMIT: <b>${data.commit_count}</b> / <b>${data.no_commit_count}</b></div>
-      <div class="service-stat">Unique agents: <b>${data.unique_agents}</b></div>
-      <div class="service-stat">USDC protected: <b>${fmtUsdc(data.usdc_protected)}</b></div>
-    </div>`;
-}
+  function fmtInt(n) { return Number(n).toLocaleString('en-US'); }
+  function parseTs(s) {
+    if (!has(s)) return NaN;
+    var t = String(s).trim();
+    if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}(\.\d+)?$/.test(t)) t = t.replace(' ', 'T') + 'Z';  // naive rows are UTC
+    else if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?$/.test(t)) t += 'Z';
+    return Date.parse(t);
+  }
+  function fmtUtc(ms) {
+    return isFinite(ms) ? new Date(ms).toISOString().replace('T', ' ').slice(0, 19) : 'Unknown time';
+  }
+  function ago(ms) {
+    var m = Math.max(0, Math.round(ms / 60000));
+    if (m < 1) return 'less than a minute ago';
+    if (m < 60) return m + (m === 1 ? ' minute ago' : ' minutes ago');
+    var h = Math.round(m / 60);
+    if (h < 48) return h + (h === 1 ? ' hour ago' : ' hours ago');
+    var d = Math.round(h / 24);
+    return d + ' days ago';
+  }
+  function short(s, n) { s = String(s); return s.length > n ? s.slice(0, n - 1) + '…' : s; }
+  function isTxHash(s) { return /^0x[0-9a-fA-F]{64}$/.test(String(s || '')); }
 
-function esc(value) {
-  return String(value)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
+  // ---- network labels ----
+  function netInfo(raw) {
+    var r = String(raw).toLowerCase();
+    if (r === 'base' || r === 'eip155:8453') return { key: 'base', label: 'Base mainnet', testnet: false, explorer: 'https://basescan.org/tx/' };
+    if (/shasta/.test(r)) return { key: 'shasta', label: 'Shasta testnet (TRON)', testnet: true };
+    if (/sepolia|testnet|goerli|nile/.test(r)) return { key: r, label: raw + ' (testnet)', testnet: true };
+    return { key: r, label: String(raw), testnet: false };
+  }
 
-function cell(value) {
-  if (value === undefined || value === null || value === '') return '—';
-  return esc(value);
-}
-
-function eventKey(event) {
-  return [
-    event.service, event.timestamp, event.agent_id, event.task_type,
-    event.scan_type, event.verdict, event.route, event.amount_usdc
-  ].join('\u0001');
-}
-
-function eventTime(value) {
-  const parsed = Date.parse(String(value || '').replace(' ', 'T'));
-  return Number.isNaN(parsed) ? 0 : parsed;
-}
-
-function collectEvents(data, history) {
-  const groups = [];
-  if (data && Array.isArray(data.recent_events)) groups.push(data.recent_events);
-  const services = data && data.services;
-  if (services && typeof services === 'object') {
-    Object.keys(services).forEach(name => {
-      const service = services[name];
-      if (service && Array.isArray(service.recent_events)) groups.push(service.recent_events);
+  // ---- loading ----
+  function getJson(url, allow404) {
+    return fetch(url, { cache: 'no-store' }).then(function (res) {
+      if (allow404 && res.status === 404) return null;
+      if (!res.ok) throw new Error(url + ' returned HTTP ' + res.status);
+      return res.json();
     });
   }
-  if (Array.isArray(history)) groups.push(history);
-  const seen = new Set();
-  const events = [];
-  groups.forEach(group => {
-    group.forEach(event => {
-      if (!event || typeof event !== 'object') return;
-      const key = eventKey(event);
-      if (seen.has(key)) return;
-      seen.add(key);
-      events.push(event);
+  function historyRows(body) {
+    if (Array.isArray(body)) return body;
+    if (isObj(body) && Array.isArray(body.events)) return body.events;
+    return [];
+  }
+
+  // ---- metrics ----
+  var CORE = [
+    { key: 'webhook', name: 'Trust Oracle (webhook)' },
+    { key: 'bazaar', name: 'Bazaar (x402)' },
+    { key: 'sentinel', name: 'Update Sentinel' }
+  ];
+  function svcAvailable(s) { return isObj(s) && s.available === true; }
+  function svcAudits(k, s) { return toNum(k === 'sentinel' ? s.total_events : s.total_audits); }
+  function svcPayments(k, s) { return toNum(k === 'sentinel' ? s.usdc_collected : s.usdc_protected); }
+
+  function deriveMetrics(m) {
+    var out = { state: 'unavailable', audits: null, commit: null, noCommit: null, payments: null, missing: [], mismatch: null, parts: [] };
+    if (!isObj(m) || !isObj(m.services)) return out;
+    var a = 0, c = 0, n = 0, p = 0, ok = 0, anyAudit = false, anyPay = false;
+    CORE.forEach(function (d) {
+      var s = m.services[d.key];
+      if (!svcAvailable(s)) { out.missing.push(d.name); return; }
+      var ca = svcAudits(d.key, s), cp = svcPayments(d.key, s);
+      ok++;
+      if (ca !== null) { a += ca; anyAudit = true; out.parts.push(d.name.split(' (')[0] + ' ' + fmtInt(ca)); }
+      if (cp !== null) { p += cp; anyPay = true; }
+      if (s.commit_count != null) c += Number(s.commit_count) || 0;
+      if (s.no_commit_count != null) n += Number(s.no_commit_count) || 0;
     });
-  });
-  events.sort((a, b) => eventTime(b.timestamp) - eventTime(a.timestamp));
-  return events;
-}
-
-function verdictCell(verdict) {
-  const text = verdict === undefined || verdict === null || verdict === '' ? '—' : String(verdict);
-  const known = text === 'COMMIT' || text === 'NO_COMMIT';
-  return `<td${known ? ' class="verdict-' + text + '"' : ''}>${esc(text)}</td>`;
-}
-
-function feedRow(event) {
-  const amount = event.amount_usdc != null && event.amount_usdc !== ''
-    ? esc(fmtUsdc(event.amount_usdc))
-    : '—';
-  const kind = event.task_type ?? event.scan_type;
-  return `<tr data-timestamp="${cell(event.timestamp)}">
-      <td>${cell(event.timestamp)}</td>
-      <td><span class="badge">${cell(event.service)}</span></td>
-      <td>${cell(event.agent_id)}</td>
-      ${verdictCell(event.verdict)}
-      <td>${cell(kind)}</td>
-      <td>${cell(event.route)}</td>
-      <td>${amount}</td>
-      <td><details>
-        <summary>payment</summary>
-        <div class="service-stat">route: <b>${cell(event.route)}</b></div>
-        <div class="service-stat">amount: <b>${amount}</b></div>
-        <div class="service-stat">agent: <b>${cell(event.agent_id)}</b></div>
-        <div class="service-stat">type: <b>${cell(kind)}</b></div>
-      </details></td>
-    </tr>`;
-}
-
-function eventNoun(count) {
-  return count === 1 ? 'event' : 'events';
-}
-
-function eventDay(event) {
-  const day = String(event.timestamp || '').slice(0, 10);
-  return /^\d{4}-\d{2}-\d{2}$/.test(day) ? day : 'Unknown date';
-}
-
-function groupConsecutive(events, keyFn) {
-  const groups = [];
-  events.forEach(event => {
-    const key = keyFn(event);
-    const last = groups[groups.length - 1];
-    if (!last || last.key !== key) groups.push({ key, events: [event] });
-    else last.events.push(event);
-  });
-  return groups;
-}
-
-function feedTable(events) {
-  return `<div class="table-scroll">
-      <table>
-        <thead><tr>
-          <th>Time (UTC)</th><th>Service</th><th>Agent</th><th>Verdict</th>
-          <th>Type</th><th>Route</th><th>Amount</th><th></th>
-        </tr></thead>
-        <tbody>${events.map(feedRow).join('')}</tbody>
-      </table>
-    </div>`;
-}
-
-function dayFolds(events, openFirstDay) {
-  return groupConsecutive(events, eventDay).map((group, dayIndex) => {
-    const parts = [];
-    for (let start = 0; start < group.events.length; start += DAY_CHUNK) {
-      parts.push(group.events.slice(start, start + DAY_CHUNK));
-    }
-    return parts.map((part, partIndex) => {
-      const range = parts.length === 1
-        ? ''
-        : ' · ' + (partIndex * DAY_CHUNK + 1) + '–' + (partIndex * DAY_CHUNK + part.length);
-      const label = group.key + ' · ' + group.events.length + ' ' + eventNoun(group.events.length) + range;
-      const open = openFirstDay && dayIndex === 0 && partIndex === 0 ? ' open' : '';
-      return `<details class="fold day-fold"${open}>
-        <summary>${esc(label)}</summary>
-        <div class="fold-body">${feedTable(part)}</div>
-      </details>`;
-    }).join('');
-  }).join('');
-}
-
-function historyFolds(events) {
-  return groupConsecutive(events, event => eventDay(event).slice(0, 7)).map((group, monthIndex) => {
-    const newest = group.events[0].timestamp;
-    const oldest = group.events[group.events.length - 1].timestamp;
-    const label = group.key + ' · ' + group.events.length + ' ' + eventNoun(group.events.length)
-      + ' · ' + newest + ' → ' + oldest;
-    const open = monthIndex === 0;
-    return `<details class="fold month-fold"${open ? ' open' : ''}>
-      <summary>${esc(label)}</summary>
-      <div class="fold-body">${dayFolds(group.events, open)}</div>
-    </details>`;
-  }).join('');
-}
-
-function renderFeed(events, historyError) {
-  const el = document.getElementById('feed');
-  if (!events || events.length === 0) {
-    el.innerHTML = '<div class="placeholder">No events yet.</div>';
-    return;
+    if (!ok || !anyAudit) return out;           // never turn "no source" into 0
+    out.state = out.missing.length ? 'partial' : 'ok';
+    out.audits = a; out.commit = c; out.noCommit = n;
+    out.payments = anyPay ? Math.round(p * 100) / 100 : null;
+    var t = toNum(m.total_audits);
+    if (t !== null && t !== a) out.mismatch = 'total_audits is ' + fmtInt(t) + ' but the service counts add up to ' + fmtInt(a) + '.';
+    return out;
   }
-  const oldest = events[events.length - 1];
-  const note = historyError
-    ? '<div class="placeholder">Older saved events could not be loaded. Showing the latest export only.</div>'
-    : '';
-  const folded = events.length > FLAT_LIMIT;
-  const meta = events.length + ' ' + eventNoun(events.length)
-    + ', newest first. Earliest: ' + oldest.timestamp + '.'
-    + (folded ? ' Earlier days and months are collapsed.' : '');
-  const body = folded
-    ? historyFolds(events)
-    : feedTable(events);
-  const collapse = folded
-    ? '<button class="load-older" id="collapse-history" type="button">Collapse history</button>'
-    : '';
-  el.innerHTML = `
-    <div class="feed-meta" id="feed-meta">${esc(meta)}</div>
-    ${note}
-    ${body}
-    ${collapse}`;
-}
 
-function renderCanonical(feed) {
-  const el = document.getElementById('canonical-feed');
-  if (!el) return;
-  try {
-    if (!feed || typeof feed !== 'object' || feed.available === false) {
-      const note = feed && feed.reason
-        ? feed.reason
-        : 'Canonical audit events are not available.';
-      el.innerHTML = '<div class="placeholder">' + esc(note) + '</div>';
+  function renderMetrics(d, loadedOk) {
+    var el = $('#metrics');
+    el.setAttribute('aria-busy', 'false');
+    function cell(label, valueHtml, notes, flag) {
+      return '<div class="metric"><p class="m-label">' + esc(label) + '</p>' + valueHtml +
+        notes.map(function (t) { return '<p class="m-note">' + t + '</p>'; }).join('') +
+        (flag ? '<p class="m-flag">' + flag + '</p>' : '') + '</div>';
+    }
+    var audits, pays;
+    if (!loadedOk || d.state === 'unavailable') {
+      var why = loadedOk ? 'No audit database was readable at the last export.' : 'The latest export could not be loaded.';
+      audits = cell('Audit Events', '<p class="m-value off">Unavailable</p>', [esc(why)], '');
+      pays = cell('Recorded Payments (USDC)', '<p class="m-value off">Unavailable</p>', [esc(why)], '');
+    } else {
+      var partial = d.state === 'partial'
+        ? '<span class="badge b-amber">Partial: ' + esc(d.missing.join(', ')) + ' unavailable</span>' : '';
+      audits = cell('Audit Events', '<p class="m-value">' + fmtInt(d.audits) + '</p>',
+        [fmtInt(d.commit) + ' COMMIT, ' + fmtInt(d.noCommit) + ' not COMMIT', esc(d.parts.join(', ')), 'Not COMMIT is the export\'s no_commit_count. The exporter source computes it as total minus COMMIT, so it may include statuses other than NO_COMMIT.'], partial);
+      pays = d.payments === null
+        ? cell('Recorded Payments (USDC)', '<p class="m-value off">Unavailable</p>', ['Payment totals were not in the export.'], '')
+        : cell('Recorded Payments (USDC)', '<p class="m-value">' + esc(fmtUsdc(d.payments)) + '</p>',
+          ['Payments on COMMIT audits (Trust Oracle, Bazaar) plus all Sentinel payments. Payments on audits that are not COMMIT are excluded.'], partial);
+    }
+    var paid = cell('Paid Verifications', '<p class="m-value off">Not shown</p>',
+      ['Audits are not reliably linked to settled payments in the export.'], '');
+    var exec = cell('On-chain Executions', '<p class="m-value off">Not implemented</p>',
+      ['No execution evidence exists yet.'], '<span class="badge b-plan">Planned</span>');
+    el.innerHTML = audits + pays + paid + exec;
+  }
+
+  function renderServices(m, loadedOk) {
+    var body = $('#services-table tbody');
+    if (!loadedOk || !isObj(m) || !isObj(m.services)) {
+      body.innerHTML = '<tr><td colspan="7" class="muted">Unavailable. The latest export could not be loaded.</td></tr>';
       return;
     }
-    const events = Array.isArray(feed.events)
-      ? feed.events.filter(event => event && typeof event === 'object')
-      : [];
-    if (events.length === 0) {
-      el.innerHTML = '<div class="placeholder">No canonical audit events yet.</div>';
-      return;
+    function nets(s) {
+      var list = Array.isArray(s.network_distribution) ? s.network_distribution : [];
+      var seen = {};
+      list.forEach(function (x) { if (isObj(x) && has(x.network)) seen[netInfo(x.network).label] = true; });
+      var k = Object.keys(seen);
+      return k.length ? esc(k.join(', ')) : '<span class="muted">Not exported</span>';
     }
-    const rows = events.map(event => {
-      const verdict = typeof event.verdict === 'string' ? event.verdict : '';
-      const ids = event.event_id || event.trace_id || (event.proof && typeof event.proof === 'object')
-        ? `<details>
-            <summary>ids</summary>
-            <div class="service-stat">event_id: <b>${cell(event.event_id)}</b></div>
-            <div class="service-stat">trace_id: <b>${cell(event.trace_id)}</b></div>
-            ${event.proof && event.proof.tx_hash ? `<div class="service-stat">proof tx: <b>${cell(event.proof.tx_hash)}</b></div>` : ''}
-            ${event.proof && event.proof.chain_index != null && event.proof.chain_index !== '' ? `<div class="service-stat">chain index: <b>${cell(event.proof.chain_index)}</b></div>` : ''}
-          </details>`
-        : '—';
-      const payment = event.payment && typeof event.payment === 'object' ? event.payment : null;
-      const amount = payment && payment.amount_usdc !== undefined && payment.amount_usdc !== null && payment.amount_usdc !== ''
-        ? esc(fmtUsdc(payment.amount_usdc))
-        : '—';
-      const paymentTx = payment ? cell(payment.tx_hash) : '—';
-      return `<tr data-timestamp="${cell(event.timestamp)}">
-        <td>${cell(event.timestamp)}</td>
-        <td><span class="badge">${cell(event.producer)}</span></td>
-        <td>${cell(event.route)}</td>
-        <td>${cell(event.agent_id)}</td>
-        ${verdictCell(verdict)}
-        <td>${cell(event.policy_id)}</td>
-        <td>${cell(event.policy_version)}</td>
-        <td>${amount}</td>
-        <td class="payment-tx">${paymentTx}</td>
-        <td>${ids}</td>
-      </tr>`;
-    }).join('');
-    el.innerHTML = `
-      <div class="feed-meta">${events.length} canonical events. Open ids on any row for event, trace, and proof.</div>
-      <div class="table-scroll">
-      <table>
-        <thead><tr>
-          <th>Time (UTC)</th><th>Producer</th><th>Route</th><th>Agent</th>
-          <th>Verdict</th><th>Policy</th><th>Version</th><th>Amount</th><th>Payment tx</th><th>Ids</th>
-        </tr></thead>
-        <tbody>${rows}</tbody>
-      </table>
-      </div>`;
-  } catch (err) {
-    el.innerHTML = '<div class="placeholder">Canonical audit events could not be displayed.</div>';
-    console.error(err);
+    var rows = CORE.map(function (d) {
+      var s = m.services[d.key];
+      if (!svcAvailable(s)) {
+        return '<tr><th scope="row">' + esc(d.name) + '</th><td colspan="6" class="muted">Unavailable. The export could not read this source.</td></tr>';
+      }
+      var a = svcAudits(d.key, s), p = svcPayments(d.key, s);
+      var agents = d.key === 'sentinel' ? null : toNum(s.unique_agents);
+      var emptyNote = (a === 0) ? ' <span class="muted">(source readable, no events)</span>' : '';
+      return '<tr><th scope="row">' + esc(d.name) + emptyNote + '</th>' +
+        '<td class="num">' + (a === null ? 'Unavailable' : fmtInt(a)) + '</td>' +
+        '<td class="num">' + (s.commit_count == null ? '–' : fmtInt(s.commit_count)) + '</td>' +
+        '<td class="num">' + (s.no_commit_count == null ? '–' : fmtInt(s.no_commit_count)) + '</td>' +
+        '<td class="num">' + (agents === null ? '–' : fmtInt(agents)) + '</td>' +
+        '<td class="num">' + (p === null ? 'Unavailable' : esc(fmtUsdc(p))) + '</td>' +
+        '<td>' + (d.key === 'sentinel' ? '<span class="muted">–</span>' : nets(s)) + '</td></tr>';
+    });
+    var ig = m.services.identity_guard;
+    rows.push('<tr><th scope="row">Identity Guard (TRON)</th><td colspan="6" class="muted">' +
+      (isObj(ig) && ig.status === 'no_live_traffic' ? 'No deployed instance is producing traffic.' : 'Unavailable.') + '</td></tr>');
+    body.innerHTML = rows.join('');
   }
-}
 
-document.getElementById('feed').addEventListener('click', event => {
-  const button = event.target.closest('#collapse-history');
-  if (!button) return;
-  document.querySelectorAll('#feed details.fold').forEach(node => { node.open = false; });
-  const month = document.querySelector('#feed details.month-fold');
-  const day = document.querySelector('#feed details.day-fold');
-  if (month) month.open = true;
-  if (day) day.open = true;
-});
+  // ---- freshness and banners ----
+  function renderFreshness(m, loadedOk, now) {
+    var el = $('#fresh'), banners = $('#banners');
+    var html = '', ban = [];
+    if (!loadedOk) {
+      el.innerHTML = '<strong>Latest export unavailable.</strong> Showing archived rows only, if any could be loaded.';
+      ban.push('<div class="banner red" role="alert"><strong>The latest export could not be loaded.</strong> Counts are unavailable. The explorer shows archived rows from audit_history.json only.</div>');
+    } else {
+      var t = parseTs(m.generated_at);
+      if (!isFinite(t)) {
+        el.innerHTML = '<strong>Export time unknown.</strong> The export has no valid generated_at value.';
+        ban.push('<div class="banner amber">The export carries no valid timestamp, so its age cannot be checked.</div>');
+      } else {
+        var age = Math.max(0, now - t);
+        el.innerHTML = 'Last export <strong>' + esc(fmtUtc(t).slice(0, 16)) + ' UTC</strong> (' + esc(ago(age)) +
+          '). Data is exported periodically, not streamed.';
+        if (age > STALE_HOURS * 3600000) {
+          ban.push('<div class="banner red" role="alert"><strong>Stale data.</strong> The last export was ' + esc(ago(age)) +
+            '. The export job may have stopped. Treat these numbers as out of date.</div>');
+        } else if (age > FRESH_MINUTES * 60000) {
+          ban.push('<div class="banner amber"><strong>Export is delayed.</strong> The last export was ' + esc(ago(age)) +
+            '; it normally runs about every 15 minutes.</div>');
+        }
+      }
+    }
+    banners.innerHTML = ban.join('');
+  }
 
-Promise.all([
-  loadMetrics(),
-  loadHistory().then(events => ({ events, error: false })).catch(() => ({ events: [], error: true }))
-]).then(([data, history]) => {
-  document.getElementById('generated-at').textContent =
-    'Last updated: ' + new Date(data.generated_at).toUTCString();
-  document.getElementById('kpi-audits').textContent = data.total_audits;
-  document.getElementById('kpi-usdc').textContent = fmtUsdc(data.total_usdc_protected);
+  // ---- event model ----
+  function normLegacy(r) {
+    var ts = parseTs(r.timestamp);
+    return { raw: r, ts: ts, service: has(r.service) ? String(r.service) : 'unknown', agent: r.agent_id,
+      task: has(r.task_type) ? r.task_type : r.scan_type, verdict: r.verdict, route: r.route, amount: toNum(r.amount_usdc) };
+  }
+  function legacyKey(e) {
+    return [e.service, isFinite(e.ts) ? Math.floor(e.ts / 1000) : String(e.raw.timestamp), e.agent, e.task, e.route, e.verdict, e.amount].join('\u0001');
+  }
+  // Combine row groups. A row present in several groups counts once; genuine
+  // repeats inside one group are kept (max count per key across groups).
+  function mergeGroups(groups) {
+    var best = {};
+    groups.forEach(function (g) {
+      var local = {};
+      g.forEach(function (raw) {
+        if (!isObj(raw)) return;
+        var e = normLegacy(raw), k = legacyKey(e);
+        (local[k] = local[k] || []).push(e);
+      });
+      Object.keys(local).forEach(function (k) {
+        if (!best[k] || local[k].length > best[k].length) best[k] = local[k];
+      });
+    });
+    var out = [];
+    Object.keys(best).forEach(function (k) { out = out.concat(best[k]); });
+    return out;
+  }
 
-  document.getElementById('services').innerHTML =
-    renderServiceCard('webhook', 'Trust Oracle (webhook)', data.services.webhook) +
-    renderServiceCard('bazaar', 'Bazaar (x402 v2)', data.services.bazaar) +
-    renderServiceCard('sentinel', 'Update Sentinel', data.services.sentinel) +
-    renderServiceCard('identity_guard', 'Identity Guard (TRON)', data.services.identity_guard);
+  function canonList(m) {
+    var c = isObj(m) ? m.canonical_audit_events : null;
+    if (!isObj(c) || c.available === false || !Array.isArray(c.events)) return [];
+    return c.events.filter(isObj);
+  }
 
-  renderFeed(collectEvents(data, history.events), history.error);
-  renderCanonical(data.canonical_audit_events);
-}).catch(err => {
-  document.getElementById('generated-at').textContent = 'metrics.json not found yet — waiting for first export.';
-  document.getElementById('feed').innerHTML = '<div class="placeholder">Audit events could not be loaded.</div>';
-  console.error(err);
-});
+  function makeEvent(leg, can) {
+    var pay = can && isObj(can.payment) ? can.payment : null;
+    var integ = can && isObj(can.integration) ? can.integration : null;
+    var netRaw = pay && has(pay.network) ? pay.network : (integ && has(integ.network) ? integ.network : null);
+    var net = netRaw ? netInfo(netRaw) : null;
+    var producer = leg ? leg.service : (can && has(can.producer) ? String(can.producer) : 'unknown');
+    var demo = !!(can && /demo/i.test(String(can.producer || '')));
+    var amount = leg && leg.amount !== null ? leg.amount : (pay ? toNum(pay.amount_usdc) : null);
+    return {
+      leg: leg, can: can, pay: pay, net: net,
+      ts: leg ? leg.ts : parseTs(can.timestamp),
+      producer: producer,
+      agent: leg ? leg.agent : can.agent_id,
+      verdict: leg ? leg.verdict : can.verdict,
+      route: leg ? leg.route : can.route,
+      task: leg ? leg.task : can.task_type,
+      amount: amount,
+      payTx: pay && has(pay.tx_hash) ? String(pay.tx_hash) : null,
+      testnet: !!(net && net.testnet),
+      demo: demo,
+      source: leg && can ? 'both' : (can ? 'v1' : 'row')
+    };
+  }
+
+  function buildEvents(m, historyRaw) {
+    var groups = [];
+    if (isObj(m)) {
+      if (Array.isArray(m.recent_events)) groups.push(m.recent_events);
+      if (isObj(m.services)) Object.keys(m.services).forEach(function (k) {
+        if (isObj(m.services[k]) && Array.isArray(m.services[k].recent_events)) groups.push(m.services[k].recent_events);
+      });
+    }
+    groups.push(historyRaw || []);
+    var legacy = mergeGroups(groups);
+    var canon = canonList(m);
+    var usedCanon = {};
+    var events = [];
+    var linked = 0;
+
+    legacy.forEach(function (L) {
+      var bestIdx = -1, bestD = Infinity;
+      canon.forEach(function (c, i) {
+        if (usedCanon[i]) return;
+        if (String(c.producer) !== L.service || c.agent_id !== L.agent || c.route !== L.route || c.verdict !== L.verdict) return;
+        var d = Math.abs(parseTs(c.timestamp) - L.ts);
+        if (d <= LINK_WINDOW_MS && d < bestD) { bestD = d; bestIdx = i; }
+      });
+      if (bestIdx >= 0) { usedCanon[bestIdx] = true; linked++; events.push(makeEvent(L, canon[bestIdx])); }
+      else events.push(makeEvent(L, null));
+    });
+    canon.forEach(function (c, i) { if (!usedCanon[i]) events.push(makeEvent(null, c)); });
+
+    events.sort(function (a, b) {
+      var x = isFinite(a.ts) ? a.ts : -Infinity, y = isFinite(b.ts) ? b.ts : -Infinity;
+      return y - x;
+    });
+    var truncated = events.length > MAX_EVENTS;
+    if (truncated) events = events.slice(0, MAX_EVENTS);
+    events.forEach(function (e, i) { e.id = i; });
+    return {
+      events: events, truncated: truncated, linked: linked,
+      stats: { legacy: legacy.length, canon: canon.length, canonOnly: canon.length - linked }
+    };
+  }
+
+  // ---- explorer rendering ----
+  function verdictBadge(v) {
+    if (v === 'COMMIT') return '<span class="badge b-sage">COMMIT</span>';
+    if (v === 'NO_COMMIT') return '<span class="badge b-red">NO_COMMIT</span>';
+    return '<span class="badge b-grey">' + esc(has(v) ? v : 'Unknown') + '</span>';
+  }
+  function producerLabel(p) {
+    if (p === 'webhook') return 'Trust Oracle (webhook)';
+    if (p === 'bazaar') return 'Bazaar (x402)';
+    return p;
+  }
+  function paymentSummary(e) {
+    if (e.payTx) return (e.amount !== null ? esc(fmtUsdc(e.amount)) : 'Reference') + '<small>tx reference</small>';
+    if (e.amount !== null) return esc(fmtUsdc(e.amount)) + '<small>amount recorded</small>';
+    return '<span class="muted">No payment data</span>';
+  }
+  function sourceLabel(e) {
+    return e.source === 'both' ? 'Audit Event v1.0 and export row' : (e.source === 'v1' ? 'Audit Event v1.0' : 'Export row');
+  }
+
+  function dlRow(k, v) { return '<dt>' + esc(k) + '</dt><dd>' + v + '</dd>'; }
+  function monoVal(v) { return '<span class="mono">' + esc(v) + '</span>'; }
+
+  function decisionPanel(e) {
+    var c = e.can, meta = c && isObj(c.metadata) ? c.metadata : {};
+    var meaning = e.verdict === 'COMMIT'
+      ? 'The evaluation approved this action.'
+      : (e.verdict === 'NO_COMMIT'
+        ? 'The evaluation did not approve this action. The record does not state whether a policy rule or a detected attack caused it unless a reason is shown.'
+        : 'The verdict is not a recognised value.');
+    var rows = '';
+    rows += dlRow('Decision', verdictBadge(e.verdict));
+    if (has(meta.dcl_reason)) rows += dlRow('Reason', esc(meta.dcl_reason));
+    if (has(meta.default_policy_verdict)) rows += dlRow('Default policy would give', esc(meta.default_policy_verdict));
+    rows += dlRow('Time (UTC)', esc(fmtUtc(e.ts)));
+    rows += dlRow('Producer', esc(producerLabel(e.producer)));
+    rows += dlRow('Route', has(e.route) ? monoVal(e.route) : '<span class="muted">Not exported</span>');
+    if (has(e.task)) rows += dlRow('Task type', esc(e.task));
+    if (c) {
+      if (has(c.event_id)) rows += dlRow('Event ID', monoVal(c.event_id));
+      if (has(c.trace_id)) rows += dlRow('Trace ID', monoVal(c.trace_id));
+      if (has(c.policy_id)) rows += dlRow('Policy', monoVal(c.policy_id + (has(c.policy_version) ? ' v' + c.policy_version : '')));
+      if (has(c.event_type)) rows += dlRow('Event type', monoVal(c.event_type));
+      if (isObj(c.proof) && has(c.proof.tx_hash)) {
+        rows += dlRow('DCL audit hash', monoVal(c.proof.tx_hash) +
+          '<div class="cap">Local hash of the audit record. Not a blockchain transaction' +
+          (has(c.proof.chain_index) ? '. Chain index ' + esc(c.proof.chain_index) : '') + '.</div>');
+      }
+      if (has(c.identity_source) || has(c.identity_confidence)) {
+        rows += dlRow('Identity (as exported)', (has(c.identity_confidence) ? 'confidence: <span class="badge b-amber">' + esc(c.identity_confidence) + '</span> ' : '') +
+          (has(c.identity_source) ? 'source: ' + monoVal(c.identity_source) : ''));
+      }
+      if (has(meta.identity_status)) rows += dlRow('Identity check', esc(meta.identity_status) + (has(meta.identity_reason) ? ' (' + esc(meta.identity_reason) + ')' : ''));
+      if (has(meta.resource)) rows += dlRow('Resource', monoVal(meta.resource));
+      if (has(meta.note)) rows += dlRow('Note', esc(meta.note));
+    } else {
+      rows += dlRow('Identity', 'No identity record is exported for this row. The agent ID is shown as recorded; the Board does not verify it.');
+    }
+    var missing = c ? '' : '<p class="missing">Not exported for this row: event ID, trace ID, policy ID and version, DCL audit hash.</p>';
+    return '<section class="panel"><header><h4>Decision</h4><span class="badge b-grey">Recorded</span></header>' +
+      '<p>' + esc(meaning) + '</p><dl>' + rows + '</dl>' + missing + '</section>';
+  }
+
+  function paymentPanel(e) {
+    var p = e.pay, rows = '', badge, text;
+    if (e.payTx) {
+      badge = '<span class="badge b-amber">Reference recorded, not verified here</span>';
+      text = 'A settlement transaction reference was exported. This Board does not check it against the chain.';
+    } else if (e.amount !== null) {
+      badge = '<span class="badge b-amber">Amount recorded</span>';
+      text = 'The service recorded this amount. The export carries no transaction reference or network for this event.';
+    } else {
+      badge = '<span class="badge b-grey">No payment data</span>';
+      var noteSaysNone = e.can && isObj(e.can.metadata) && /no x402 payment was sent/i.test(String(e.can.metadata.note || ''));
+      text = noteSaysNone ? 'No payment was sent for this event.' : 'No payment is attached to this record in the export.';
+    }
+    if (e.amount !== null) rows += dlRow('Amount (USDC)', esc(fmtUsdc(e.amount)));
+    if (e.net) rows += dlRow('Network', esc(e.net.label) + (e.net.testnet ? ' <span class="badge b-amber">Testnet</span>' : ''));
+    else if (e.amount !== null) rows += dlRow('Network', '<span class="muted">Not exported per event</span>');
+    if (p) {
+      if (has(p.asset)) rows += dlRow('Asset', monoVal(p.asset));
+      if (has(p.payer)) rows += dlRow('Payer', monoVal(p.payer));
+      if (has(p.pay_to)) rows += dlRow('Pay to', monoVal(p.pay_to));
+      if (has(p.payment_id)) rows += dlRow('Payment ID', monoVal(p.payment_id));
+    }
+    if (e.payTx) {
+      var link = '';
+      if (isTxHash(e.payTx) && e.net && e.net.explorer) {
+        link = '<div class="cap"><a href="' + esc(e.net.explorer + e.payTx) + '" target="_blank" rel="noopener noreferrer">Inspect on BaseScan</a> (opens an external site)</div>';
+      }
+      rows += dlRow('Settlement transaction', monoVal(e.payTx) + link);
+    }
+    rows += dlRow('Source', e.pay ? 'Audit Event v1.0 payment object' : 'Service payment table (chain_payments)');
+    return '<section class="panel"><header><h4>Payment</h4>' + badge + '</header><p>' + esc(text) +
+      '</p><dl>' + rows + '</dl><p class="cap">A payment record is not proof of authorization or execution.</p></section>';
+  }
+
+  function plannedPanel(title) {
+    return '<section class="panel"><header><h4>' + esc(title) + '</h4><span class="badge b-plan">Not implemented</span></header>' +
+      '<p class="muted">Planned. No record of this type exists for this event. <a href="#planned">About this feature</a></p></section>';
+  }
+
+  function rawJson(e) {
+    var o = {};
+    if (e.leg) o.export_row = e.leg.raw;
+    if (e.can) o.audit_event_v1 = e.can;
+    return JSON.stringify(o, null, 2);
+  }
+
+  function chipsFor(e) {
+    var chips = '';
+    if (e.testnet) chips += '<span class="badge b-amber">Testnet</span>';
+    if (e.demo) chips += '<span class="badge b-amber">Demo</span>';
+    return chips ? '<span class="chips">' + chips + '</span>' : '';
+  }
+
+  function rowHtml(e) {
+    var notice = '';
+    if (e.testnet || e.demo) {
+      notice = '<div class="notice amber">' + (e.testnet ? 'This event is on a testnet (' + esc(e.net.label) + '). It is not mainnet activity. ' : '') +
+        (e.demo ? 'It was produced by a demo script, not by production traffic. ' : '') + '</div>';
+    }
+    return '<li><details class="ev"><summary>' +
+      '<span class="c-time">' + esc(fmtUtc(e.ts)) + '</span>' +
+      '<span class="c-dec">' + verdictBadge(e.verdict) + '</span>' +
+      '<span class="c-agent" title="' + esc(e.agent) + '">' + (has(e.agent) ? esc(short(e.agent, 38)) : '<span class="muted">Not exported</span>') + '</span>' +
+      '<span class="c-act"><span class="act-main" title="' + esc(e.route) + '">' + esc(has(e.route) ? short(e.route, 48) : 'Not exported') + '</span>' +
+      (has(e.task) ? '<span class="act-sub">' + esc(e.task) + '</span>' : '') + '</span>' +
+      '<span class="c-pay">' + paymentSummary(e) + '</span>' +
+      '<span class="c-src"><small>' + esc(sourceLabel(e)) + '</small>' + chipsFor(e) + '</span>' +
+      '</summary><div class="detail">' + notice +
+      '<div class="panels">' + decisionPanel(e) + '<div>' + paymentPanel(e) + '</div>' +
+      plannedPanel('Proof of Allowance') + plannedPanel('Execution') + '</div>' +
+      '<details class="raw"><summary>Raw record (JSON)</summary><pre class="json" tabindex="0">' + esc(rawJson(e)) + '</pre></details>' +
+      '</div></details></li>';
+  }
+
+  // ---- filtering ----
+  var S = { events: [], filtered: [], shown: 0, total: null, ready: false, loadFailed: false };
+
+  function haystack(e) {
+    var c = e.can || {}, meta = isObj(c.metadata) ? c.metadata : {}, proof = isObj(c.proof) ? c.proof : {};
+    return [e.agent, e.route, e.task, e.verdict, e.producer, c.event_id, c.trace_id, c.policy_id, proof.tx_hash, e.payTx,
+      meta.resource, meta.dcl_reason].filter(has).join(' ').toLowerCase();
+  }
+  function readFilters() {
+    return { q: $('#f-q').value.trim().toLowerCase(), verdict: $('#f-verdict').value, producer: $('#f-producer').value,
+      evidence: $('#f-evidence').value, network: $('#f-network').value, from: $('#f-from').value, to: $('#f-to').value };
+  }
+  function anyFilter(f) { return !!(f.q || f.verdict || f.producer || f.evidence || f.network || f.from || f.to); }
+  function matches(e, f) {
+    if (f.verdict && e.verdict !== f.verdict) return false;
+    if (f.producer && e.producer !== f.producer) return false;
+    if (f.network) {
+      var k = e.net ? e.net.key : 'none';
+      if (k !== f.network) return false;
+    }
+    if (f.evidence) {
+      if (f.evidence === 'pay-amount' && e.amount === null) return false;
+      if (f.evidence === 'pay-tx' && !e.payTx) return false;
+      if (f.evidence === 'pay-none' && (e.amount !== null || e.payTx)) return false;
+      if (f.evidence === 'v1' && !e.can) return false;
+      if (f.evidence === 'test' && !(e.testnet || e.demo)) return false;
+    }
+    if (f.from) { var a = Date.parse(f.from + 'T00:00:00Z'); if (!(e.ts >= a)) return false; }
+    if (f.to) { var b = Date.parse(f.to + 'T23:59:59.999Z'); if (!(e.ts <= b)) return false; }
+    if (f.q && haystack(e).indexOf(f.q) === -1) return false;
+    return true;
+  }
+
+  function fillSelects() {
+    var prod = {}, nets = {};
+    S.events.forEach(function (e) {
+      prod[e.producer] = true;
+      nets[e.net ? e.net.key : 'none'] = e.net ? e.net.label : 'Not exported per event';
+    });
+    $('#f-producer').innerHTML = '<option value="">All</option>' + Object.keys(prod).sort().map(function (p) {
+      return '<option value="' + esc(p) + '">' + esc(producerLabel(p)) + '</option>'; }).join('');
+    $('#f-network').innerHTML = '<option value="">All</option>' + Object.keys(nets).sort().map(function (k) {
+      return '<option value="' + esc(k) + '">' + esc(nets[k]) + '</option>'; }).join('');
+  }
+
+  function updateMeta() {
+    var f = readFilters(), n = S.filtered.length, total = S.events.length;
+    var txt;
+    if (!total) txt = '';
+    else if (anyFilter(f)) txt = fmtInt(n) + ' of ' + fmtInt(total) + ' events match. Showing ' + fmtInt(Math.min(S.shown, n)) + ', newest first.';
+    else txt = fmtInt(total) + ' events with row-level detail. Showing ' + fmtInt(Math.min(S.shown, n)) + ', newest first.';
+    var extra = '';
+    if (S.total !== null && S.legacyCount !== undefined && !anyFilter(f)) {
+      extra = ' The latest export counts ' + fmtInt(S.total) + ' audits; row-level detail exists for ' + fmtInt(S.legacyCount) +
+        '. The remaining rows are counted but are not in the exported files.';
+    }
+    $('#result-meta').textContent = txt + extra;
+  }
+
+  function renderList(reset) {
+    var list = $('#ev-list');
+    if (reset) { S.shown = Math.min(PAGE_SIZE, S.filtered.length); }
+    var slice = S.filtered.slice(0, S.shown);
+    if (!S.ready) return;
+    if (!S.events.length) {
+      list.innerHTML = '<li class="empty"><strong>' + (S.loadFailed ? 'No events could be loaded.' : 'No events yet.') + '</strong>' +
+        (S.loadFailed ? 'Neither the latest export nor the archive returned any rows. Open <a href="metrics.json">metrics.json</a> to check the export.' : 'The export contains no audit events.') + '</li>';
+      $('#more').hidden = true; updateMeta(); return;
+    }
+    if (!S.filtered.length) {
+      list.innerHTML = '<li class="empty"><strong>No events match these filters.</strong>Widen the date range or reset the filters.</li>';
+      $('#more').hidden = true; updateMeta(); return;
+    }
+    list.innerHTML = slice.map(rowHtml).join('');
+    var remaining = S.filtered.length - S.shown;
+    $('#more').hidden = remaining <= 0;
+    $('#more-btn').textContent = 'Show ' + Math.min(PAGE_SIZE, remaining) + ' more';
+    $('#more-note').textContent = remaining > 0 ? fmtInt(remaining) + ' more events match' : '';
+    updateMeta();
+  }
+
+  function applyFilters() {
+    var f = readFilters();
+    S.filtered = S.events.filter(function (e) { return matches(e, f); });
+    renderList(true);
+  }
+  function showMore() {
+    var from = S.shown;
+    S.shown = Math.min(S.shown + PAGE_SIZE, S.filtered.length);
+    $('#ev-list').insertAdjacentHTML('beforeend', S.filtered.slice(from, S.shown).map(rowHtml).join(''));
+    var remaining = S.filtered.length - S.shown;
+    $('#more').hidden = remaining <= 0;
+    $('#more-btn').textContent = 'Show ' + Math.min(PAGE_SIZE, remaining) + ' more';
+    $('#more-note').textContent = remaining > 0 ? fmtInt(remaining) + ' more events match' : '';
+    updateMeta();
+  }
+
+  // ---- diagnostics ----
+  function renderDiagnostics(info) {
+    var rows = [];
+    function r(k, v) { rows.push('<tr><th scope="row">' + esc(k) + '</th><td>' + v + '</td></tr>'); }
+    r('metrics.json', info.metricsOk ? 'Loaded' : '<span class="badge b-red">Failed to load</span>');
+    if (info.metricsOk) {
+      var t = parseTs(info.m.generated_at);
+      r('Export time', isFinite(t) ? esc(fmtUtc(t)) + ' UTC' : 'Missing or invalid');
+    }
+    r('audit_history.json', info.historyErr ? '<span class="badge b-amber">Failed to load</span> Earlier rows may be missing.' : (fmtInt(info.historyCount) + ' rows'));
+    if (info.metricsOk) {
+      var c = isObj(info.m.canonical_audit_events) ? info.m.canonical_audit_events : null;
+      r('Canonical events', c && c.available !== false ? fmtInt(info.stats.canon) + ' Audit Event v1.0 records' : 'Unavailable' + (c && c.reason ? '' : ''));
+    }
+    if (info.built) {
+      r('Rows after combining sources', fmtInt(info.stats.legacy) + ' (duplicates across the latest export and the archive counted once)');
+      r('Linked to a v1.0 event', fmtInt(info.built.linked) + ' rows. Matched by service, agent, route, decision, and a timestamp within 1.5 seconds. This is a heuristic: the export rows carry no event ID.');
+      r('v1.0 events without a row', fmtInt(info.stats.canonOnly));
+      r('Events shown in the explorer', fmtInt(info.built.events.length) + (info.built.truncated ? ' (capped at ' + fmtInt(MAX_EVENTS) + ', oldest dropped)' : ''));
+    }
+    if (info.built) {
+      var seen = {};
+      info.built.events.forEach(function (e) { var v = has(e.verdict) ? String(e.verdict) : '(missing)'; seen[v] = (seen[v] || 0) + 1; });
+      var odd = Object.keys(seen).filter(function (v) { return v !== 'COMMIT' && v !== 'NO_COMMIT'; });
+      r('Verdict values in explorer rows', Object.keys(seen).sort().map(function (v) { return esc(v) + ' ' + fmtInt(seen[v]); }).join(', ') +
+        (odd.length ? ' <span class="badge b-amber">Unexpected value: ' + esc(odd.join(', ')) + '</span> These rows are not COMMIT or NO_COMMIT.' : '. Only COMMIT and NO_COMMIT appear in these rows; this says nothing about the audits that have no row.'));
+    }
+    if (info.derived && info.derived.mismatch) r('Consistency check', '<span class="badge b-amber">Mismatch</span> ' + esc(info.derived.mismatch));
+    else if (info.derived && info.derived.state !== 'unavailable') r('Consistency check', 'total_audits matches the service counts.');
+    $('#diagnostics').innerHTML = '<div class="scroll-x"><table class="plain"><tbody>' + rows.join('') + '</tbody></table></div>';
+  }
+
+  // ---- boot ----
+  function resetFilters() {
+    ['f-q', 'f-verdict', 'f-producer', 'f-evidence', 'f-network', 'f-from', 'f-to'].forEach(function (id) { $('#' + id).value = ''; });
+    applyFilters();
+  }
+  var timer;
+  function wire() {
+    $('#f-q').addEventListener('input', function () { clearTimeout(timer); timer = setTimeout(applyFilters, 150); });
+    ['f-verdict', 'f-producer', 'f-evidence', 'f-network', 'f-from', 'f-to'].forEach(function (id) {
+      $('#' + id).addEventListener('change', applyFilters);
+    });
+    $('#f-reset').addEventListener('click', resetFilters);
+    $('#more-btn').addEventListener('click', showMore);
+  }
+  wire();
+
+  Promise.all([
+    getJson('./metrics.json', false).then(function (v) { if (!isObj(v)) throw new Error('metrics.json is not an object'); return { ok: true, v: v }; })
+      .catch(function (err) { console.error(err); return { ok: false, v: null }; }),
+    getJson('./audit_history.json', true).then(function (v) { return { err: false, rows: historyRows(v) }; })
+      .catch(function (err) { console.error(err); return { err: true, rows: [] }; })
+  ]).then(function (res) {
+    var mres = res[0], hres = res[1], m = mres.v;
+    var now = Date.now();
+    var derived = deriveMetrics(m);
+
+    renderFreshness(m, mres.ok, now);
+    renderMetrics(derived, mres.ok);
+    renderServices(m, mres.ok);
+
+    var built = buildEvents(m, hres.rows);
+    S.events = built.events;
+    S.total = mres.ok && derived.state !== 'unavailable' ? derived.audits : null;
+    S.legacyCount = built.stats.legacy;
+    S.loadFailed = !mres.ok && !built.events.length;
+    S.ready = true;
+    fillSelects();
+    applyFilters();
+
+    if (hres.err && mres.ok) {
+      $('#banners').insertAdjacentHTML('beforeend', '<div class="banner amber"><strong>The archive could not be loaded.</strong> Events older than the latest export may be missing from the explorer.</div>');
+    }
+    if (derived.mismatch) {
+      $('#banners').insertAdjacentHTML('beforeend', '<div class="banner amber"><strong>Counts disagree.</strong> ' + esc(derived.mismatch) + '</div>');
+    }
+    renderDiagnostics({ metricsOk: mres.ok, m: m, historyErr: hres.err, historyCount: hres.rows.length, built: built, stats: built.stats, derived: derived });
+  });
+})();
 </script>
-
 </body>
 </html>
