@@ -1,8 +1,17 @@
 {
-  "generated_at": "2026-10-12T18:30:02+00:00",
-  "total_audits": 149,
-  "total_usdc_protected": 2.02,
+  "generated_at": "2026-10-12T18:45:01+00:00",
+  "total_audits": 150,
+  "total_usdc_protected": 2.04,
   "recent_events": [
+    {
+      "service": "webhook",
+      "timestamp": "2026-10-12 18:34:25",
+      "agent_id": "fronesis",
+      "task_type": "post",
+      "verdict": "COMMIT",
+      "route": "/evaluate/jailbreak",
+      "amount_usdc": 0.02
+    },
     {
       "service": "webhook",
       "timestamp": "2026-10-12 14:32:30",
@@ -128,32 +137,32 @@
       "verdict": "COMMIT",
       "route": "/evaluate/jailbreak",
       "amount_usdc": 0.02
-    },
-    {
-      "service": "webhook",
-      "timestamp": "2026-10-10 06:07:59",
-      "agent_id": "fronesis",
-      "task_type": "post",
-      "verdict": "COMMIT",
-      "route": "/evaluate/jailbreak",
-      "amount_usdc": 0.02
     }
   ],
   "services": {
     "webhook": {
       "available": true,
-      "total_audits": 69,
-      "commit_count": 64,
+      "total_audits": 70,
+      "commit_count": 65,
       "no_commit_count": 5,
       "unique_agents": 10,
-      "usdc_protected": 1.09,
+      "usdc_protected": 1.11,
       "network_distribution": [
         {
           "network": "base",
-          "count": 57
+          "count": 58
         }
       ],
       "recent_events": [
+        {
+          "service": "webhook",
+          "timestamp": "2026-10-12 18:34:25",
+          "agent_id": "fronesis",
+          "task_type": "post",
+          "verdict": "COMMIT",
+          "route": "/evaluate/jailbreak",
+          "amount_usdc": 0.02
+        },
         {
           "service": "webhook",
           "timestamp": "2026-10-12 14:32:30",
@@ -274,15 +283,6 @@
         {
           "service": "webhook",
           "timestamp": "2026-10-10 06:07:59",
-          "agent_id": "fronesis",
-          "task_type": "post",
-          "verdict": "COMMIT",
-          "route": "/evaluate/jailbreak",
-          "amount_usdc": 0.02
-        },
-        {
-          "service": "webhook",
-          "timestamp": "2026-10-07 16:15:24",
           "agent_id": "fronesis",
           "task_type": "post",
           "verdict": "COMMIT",
