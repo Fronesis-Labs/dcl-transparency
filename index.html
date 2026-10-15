@@ -629,8 +629,13 @@
   // ---- event model ----
   function normLegacy(r) {
     var ts = parseTs(r.timestamp);
+    var payment = isObj(r.payment) ? r.payment : null;
+    var amount = toNum(r.amount_usdc);
+    if (amount === null && payment) amount = toNum(payment.amount_usdc);
     return { raw: r, ts: ts, service: has(r.service) ? String(r.service) : 'unknown', agent: r.agent_id,
-      task: has(r.task_type) ? r.task_type : r.scan_type, verdict: r.verdict, route: r.route, amount: toNum(r.amount_usdc) };
+      task: has(r.task_type) ? r.task_type : r.scan_type, verdict: r.verdict, route: r.route, amount: amount,
+      eventId: has(r.event_id) ? String(r.event_id) : null, traceId: has(r.trace_id) ? String(r.trace_id) : null,
+      auditHash: has(r.audit_hash) ? String(r.audit_hash) : null, payment: payment };
   }
   function legacyKey(e) {
     return [e.service, isFinite(e.ts) ? Math.floor(e.ts / 1000) : String(e.raw.timestamp), e.agent, e.task, e.route, e.verdict, e.amount].join('\u0001');
@@ -661,16 +666,32 @@
     return c.events.filter(isObj);
   }
 
-  function makeEvent(leg, can) {
-    var pay = can && isObj(can.payment) ? can.payment : null;
+  function makeEvent(leg, can, link) {
+    var canPay = can && isObj(can.payment) ? can.payment : null;
+    var legPay = leg && leg.payment ? leg.payment : null;
+    var pay = canPay || legPay;
+    var paySource = canPay ? 'v1' : (legPay ? 'row' : null);
     var integ = can && isObj(can.integration) ? can.integration : null;
-    var netRaw = pay && has(pay.network) ? pay.network : (integ && has(integ.network) ? integ.network : null);
+    var netRaw = pay && has(pay.network) ? pay.network : (legPay && has(legPay.network) ? legPay.network : (integ && has(integ.network) ? integ.network : null));
+    var proof = can && isObj(can.proof) ? can.proof : null;
+    var auditHashes = [];
+    if (proof && has(proof.tx_hash)) auditHashes.push(String(proof.tx_hash).toLowerCase());
+    if (leg && leg.auditHash) auditHashes.push(leg.auditHash.toLowerCase());
+    // A payment link needs a settlement hash. A canonical payment.tx_hash is the settlement by schema;
+    // a legacy row must say so itself (tx_hash_status === 'settlement'). Never a local audit hash.
+    var rawTx = pay && has(pay.tx_hash) ? String(pay.tx_hash) : null;
+    if (rawTx && paySource === 'row' && pay.tx_hash_status !== 'settlement') rawTx = null;
+    if (rawTx && auditHashes.indexOf(rawTx.toLowerCase()) !== -1) rawTx = null;
     var net = netRaw ? netInfo(netRaw) : null;
     var producer = leg ? leg.service : (can && has(can.producer) ? String(can.producer) : 'unknown');
     var demo = !!(can && /demo/i.test(String(can.producer || '')));
     var amount = leg && leg.amount !== null ? leg.amount : (pay ? toNum(pay.amount_usdc) : null);
     return {
-      leg: leg, can: can, pay: pay, net: net,
+      leg: leg, can: can, pay: pay, paySource: paySource, net: net, link: link || null,
+      eventId: can && has(can.event_id) ? String(can.event_id) : (leg ? leg.eventId : null),
+      traceId: can && has(can.trace_id) ? String(can.trace_id) : (leg ? leg.traceId : null),
+      auditHashes: (proof && has(proof.tx_hash) ? [String(proof.tx_hash)] : []).concat(
+        leg && leg.auditHash && !(proof && String(proof.tx_hash) === leg.auditHash) ? [leg.auditHash] : []),
       ts: leg ? leg.ts : parseTs(can.timestamp),
       producer: producer,
       agent: leg ? leg.agent : can.agent_id,
@@ -678,7 +699,7 @@
       route: leg ? leg.route : can.route,
       task: leg ? leg.task : can.task_type,
       amount: amount,
-      payTx: pay && has(pay.tx_hash) ? String(pay.tx_hash) : null,
+      payTx: rawTx,
       testnet: !!(net && net.testnet),
       demo: demo,
       source: leg && can ? 'both' : (can ? 'v1' : 'row')
@@ -698,9 +719,20 @@
     var canon = canonList(m);
     var usedCanon = {};
     var events = [];
-    var linked = 0;
+    var linked = 0, heuristic = 0;
 
-    legacy.forEach(function (L) {
+    // Pass 1: exact match on the real event_id exported with the row.
+    var canonById = {};
+    canon.forEach(function (c, i) { if (has(c.event_id) && canonById[c.event_id] === undefined) canonById[c.event_id] = i; });
+    var pairs = legacy.map(function () { return null; });
+    legacy.forEach(function (L, li) {
+      var i = L.eventId ? canonById[L.eventId] : undefined;
+      if (i === undefined || usedCanon[i]) return;
+      usedCanon[i] = true; pairs[li] = { idx: i, how: 'event_id' };
+    });
+    // Pass 2: heuristic (producer, agent, route, decision, time window) for rows that carry no event_id.
+    legacy.forEach(function (L, li) {
+      if (pairs[li] || L.eventId) return;
       var bestIdx = -1, bestD = Infinity;
       canon.forEach(function (c, i) {
         if (usedCanon[i]) return;
@@ -708,10 +740,14 @@
         var d = Math.abs(parseTs(c.timestamp) - L.ts);
         if (d <= LINK_WINDOW_MS && d < bestD) { bestD = d; bestIdx = i; }
       });
-      if (bestIdx >= 0) { usedCanon[bestIdx] = true; linked++; events.push(makeEvent(L, canon[bestIdx])); }
-      else events.push(makeEvent(L, null));
+      if (bestIdx >= 0) { usedCanon[bestIdx] = true; pairs[li] = { idx: bestIdx, how: 'heuristic' }; }
     });
-    canon.forEach(function (c, i) { if (!usedCanon[i]) events.push(makeEvent(null, c)); });
+    legacy.forEach(function (L, li) {
+      var pr = pairs[li];
+      if (pr) { linked++; if (pr.how === 'heuristic') heuristic++; events.push(makeEvent(L, canon[pr.idx], pr.how)); }
+      else events.push(makeEvent(L, null, null));
+    });
+    canon.forEach(function (c, i) { if (!usedCanon[i]) events.push(makeEvent(null, c, null)); });
 
     events.sort(function (a, b) {
       var x = isFinite(a.ts) ? a.ts : -Infinity, y = isFinite(b.ts) ? b.ts : -Infinity;
@@ -721,7 +757,7 @@
     if (truncated) events = events.slice(0, MAX_EVENTS);
     events.forEach(function (e, i) { e.id = i; });
     return {
-      events: events, truncated: truncated, linked: linked,
+      events: events, truncated: truncated, linked: linked, heuristic: heuristic,
       stats: { legacy: legacy.length, canon: canon.length, canonOnly: canon.length - linked }
     };
   }
@@ -738,12 +774,14 @@
     return p;
   }
   function paymentSummary(e) {
+    if (e.pay && e.pay.status === 'ambiguous') return '<span class="muted">Ambiguous</span>';
     if (e.payTx) return (e.amount !== null ? esc(fmtUsdc(e.amount)) : 'Reference') + '<small>tx reference</small>';
     if (e.amount !== null) return esc(fmtUsdc(e.amount)) + '<small>amount recorded</small>';
     return '<span class="muted">No payment data</span>';
   }
   function sourceLabel(e) {
-    return e.source === 'both' ? 'Audit Event v1.0 and export row' : (e.source === 'v1' ? 'Audit Event v1.0' : 'Export row');
+    var base = e.source === 'both' ? 'Audit Event v1.0 + legacy record' : (e.source === 'v1' ? 'Audit Event v1.0' : 'Legacy record');
+    return e.source === 'both' && e.link === 'heuristic' ? base + ' (heuristic match)' : base;
   }
 
   function dlRow(k, v) { return '<dt>' + esc(k) + '</dt><dd>' + v + '</dd>'; }
@@ -764,16 +802,18 @@
     rows += dlRow('Producer', esc(producerLabel(e.producer)));
     rows += dlRow('Route', has(e.route) ? monoVal(e.route) : '<span class="muted">Not exported</span>');
     if (has(e.task)) rows += dlRow('Task type', esc(e.task));
+    if (has(e.eventId)) rows += dlRow('Event ID', monoVal(e.eventId));
+    if (has(e.traceId)) rows += dlRow('Trace ID', monoVal(e.traceId));
+    if (e.link === 'event_id') rows += dlRow('Audit event link', 'Exact match on event ID.');
+    else if (e.link === 'heuristic') rows += dlRow('Audit event link', '<span class="badge b-amber">Heuristic</span> Matched by time, agent, route and decision. Not a verified link.');
+    else if (e.eventId && e.leg && e.leg.eventId) rows += dlRow('Audit event link', 'IDs exported with this row (exact audit-hash match).');
+    e.auditHashes.forEach(function (h, i) {
+      var idx = i === 0 && c && isObj(c.proof) && has(c.proof.chain_index) ? '. Chain index ' + esc(c.proof.chain_index) : '';
+      rows += dlRow('DCL audit hash', monoVal(h) + '<div class="cap">Local hash of the audit record. Not a blockchain transaction; it has no explorer link' + idx + '.</div>');
+    });
     if (c) {
-      if (has(c.event_id)) rows += dlRow('Event ID', monoVal(c.event_id));
-      if (has(c.trace_id)) rows += dlRow('Trace ID', monoVal(c.trace_id));
       if (has(c.policy_id)) rows += dlRow('Policy', monoVal(c.policy_id + (has(c.policy_version) ? ' v' + c.policy_version : '')));
       if (has(c.event_type)) rows += dlRow('Event type', monoVal(c.event_type));
-      if (isObj(c.proof) && has(c.proof.tx_hash)) {
-        rows += dlRow('DCL audit hash', monoVal(c.proof.tx_hash) +
-          '<div class="cap">Local hash of the audit record. Not a blockchain transaction' +
-          (has(c.proof.chain_index) ? '. Chain index ' + esc(c.proof.chain_index) : '') + '.</div>');
-      }
       if (has(c.identity_source) || has(c.identity_confidence)) {
         rows += dlRow('Identity (as exported)', (has(c.identity_confidence) ? 'confidence: <span class="badge b-amber">' + esc(c.identity_confidence) + '</span> ' : '') +
           (has(c.identity_source) ? 'source: ' + monoVal(c.identity_source) : ''));
@@ -784,7 +824,12 @@
     } else {
       rows += dlRow('Identity', 'No identity record is exported for this row. The agent ID is shown as recorded; the Board does not verify it.');
     }
-    var missing = c ? '' : '<p class="missing">Not exported for this row: event ID, trace ID, policy ID and version, DCL audit hash.</p>';
+    var miss = [];
+    if (!has(e.eventId)) miss.push('event ID');
+    if (!has(e.traceId)) miss.push('trace ID');
+    if (!c) miss.push('policy ID and version');
+    if (!e.auditHashes.length) miss.push('DCL audit hash');
+    var missing = miss.length ? '<p class="missing">Not available for this row: ' + miss.join(', ') + '.</p>' : '';
     return '<section class="panel"><header><h4>Decision</h4><span class="badge b-grey">Recorded</span></header>' +
       '<p>' + esc(meaning) + '</p><dl>' + rows + '</dl>' + missing + '</section>';
   }
@@ -794,9 +839,12 @@
     if (e.payTx) {
       badge = '<span class="badge b-amber">Reference recorded, not verified here</span>';
       text = 'A settlement transaction reference was exported. This Board does not check it against the chain.';
+    } else if (p && p.status === 'ambiguous') {
+      badge = '<span class="badge b-amber">Ambiguous</span>';
+      text = 'More than one payment row or audit row shares this record\'s audit hash, so no amount is attributed to it.';
     } else if (e.amount !== null) {
       badge = '<span class="badge b-amber">Amount recorded</span>';
-      text = 'The service recorded this amount. The export carries no transaction reference or network for this event.';
+      text = 'The service recorded this amount. No settlement transaction reference is exported for this event.';
     } else {
       badge = '<span class="badge b-grey">No payment data</span>';
       var noteSaysNone = e.can && isObj(e.can.metadata) && /no x402 payment was sent/i.test(String(e.can.metadata.note || ''));
@@ -816,8 +864,13 @@
       var link = '';
       if (isTxHash(e.payTx) && e.net && e.net.explorer) link = baseScanCap(e.net.explorer + e.payTx);
       rows += dlRow('Settlement transaction', monoVal(e.payTx) + link);
+    } else if (e.paySource === 'row' && p.status !== 'ambiguous') {
+      var st = p.tx_hash_status;
+      rows += dlRow('Settlement transaction', '<span class="muted">' + (st === 'malformed' ? 'Not shown: the exported value is not a valid transaction hash.'
+        : (st === 'same_as_audit_hash' ? 'Not shown: the exported value equals the local DCL audit hash.' : 'Not available in the export.')) + '</span>');
     }
-    rows += dlRow('Source', e.pay ? 'Audit Event v1.0 payment object' : 'Service payment table (chain_payments)');
+    rows += dlRow('Source', e.paySource === 'v1' ? 'Audit Event v1.0 payment object'
+      : (e.paySource === 'row' ? 'Legacy export row, payment object (chain_payments)' : 'Service payment table (chain_payments)'));
     return '<section class="panel"><header><h4>Payment</h4>' + badge + '</header><p>' + esc(text) +
       '</p><dl>' + rows + '</dl><p class="cap">A payment record is not proof of authorization or execution.</p></section>';
   }
@@ -867,7 +920,7 @@
 
   function haystack(e) {
     var c = e.can || {}, meta = isObj(c.metadata) ? c.metadata : {}, proof = isObj(c.proof) ? c.proof : {};
-    return [e.agent, e.route, e.task, e.verdict, e.producer, c.event_id, c.trace_id, c.policy_id, proof.tx_hash, e.payTx,
+    return [e.agent, e.route, e.task, e.verdict, e.producer, c.event_id, c.trace_id, e.eventId, e.traceId, e.auditHashes.join(' '), c.policy_id, proof.tx_hash, e.payTx,
       meta.resource, meta.dcl_reason].filter(has).join(' ').toLowerCase();
   }
   function readFilters() {
@@ -975,7 +1028,7 @@
     }
     if (info.built) {
       r('Rows after combining sources', fmtInt(info.stats.legacy) + ' (duplicates across the latest export and the archive counted once)');
-      r('Linked to a v1.0 event', fmtInt(info.built.linked) + ' rows. Matched by service, agent, route, decision, and a timestamp within 1.5 seconds. This is a heuristic: the export rows carry no event ID.');
+      r('Linked to a v1.0 event', fmtInt(info.built.linked) + ' rows: ' + fmtInt(info.built.linked - info.built.heuristic) + ' by exact event ID, ' + fmtInt(info.built.heuristic) + ' by heuristic (service, agent, route, decision, and a timestamp within 1.5 seconds). A heuristic link is not verified.');
       r('v1.0 events without a row', fmtInt(info.stats.canonOnly));
       r('Events shown in the explorer', fmtInt(info.built.events.length) + (info.built.truncated ? ' (capped at ' + fmtInt(MAX_EVENTS) + ', oldest dropped)' : ''));
     }
