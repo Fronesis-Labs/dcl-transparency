@@ -467,6 +467,15 @@
   }
   function short(s, n) { s = String(s); return s.length > n ? s.slice(0, n - 1) + '…' : s; }
   function isTxHash(s) { return /^0x[0-9a-fA-F]{64}$/.test(String(s || '')); }
+  function isAddr(s) { return /^0x[0-9a-fA-F]{40}$/.test(String(s || '')); }
+  function baseScanCap(url) {
+    return '<div class="cap"><a href="' + esc(url) + '" target="_blank" rel="noopener noreferrer">Inspect on BaseScan</a> (opens an external site)</div>';
+  }
+  function addressCell(v, e) {
+    var html = monoVal(v);
+    if (isAddr(v) && e.net && e.net.key === 'base') html += baseScanCap('https://basescan.org/address/' + v);
+    return html;
+  }
 
   // ---- network labels ----
   function netInfo(raw) {
@@ -796,17 +805,16 @@
     if (e.amount !== null) rows += dlRow('Amount (USDC)', esc(fmtUsdc(e.amount)));
     if (e.net) rows += dlRow('Network', esc(e.net.label) + (e.net.testnet ? ' <span class="badge b-amber">Testnet</span>' : ''));
     else if (e.amount !== null) rows += dlRow('Network', '<span class="muted">Not exported per event</span>');
-    if (p) {
-      if (has(p.asset)) rows += dlRow('Asset', monoVal(p.asset));
-      if (has(p.payer)) rows += dlRow('Payer', monoVal(p.payer));
-      if (has(p.pay_to)) rows += dlRow('Pay to', monoVal(p.pay_to));
-      if (has(p.payment_id)) rows += dlRow('Payment ID', monoVal(p.payment_id));
-    }
+    var meta = e.can && isObj(e.can.metadata) ? e.can.metadata : null;
+    var payer = p && has(p.payer) ? p.payer : null;
+    var payTo = p && has(p.pay_to) ? p.pay_to : (meta && has(meta.pay_to) ? meta.pay_to : null);
+    if (p && has(p.asset)) rows += dlRow('Asset', monoVal(p.asset));
+    if (payer !== null) rows += dlRow('Payer', addressCell(payer, e));
+    if (payTo !== null) rows += dlRow('Pay to', addressCell(payTo, e));
+    if (p && has(p.payment_id)) rows += dlRow('Payment ID', monoVal(p.payment_id));
     if (e.payTx) {
       var link = '';
-      if (isTxHash(e.payTx) && e.net && e.net.explorer) {
-        link = '<div class="cap"><a href="' + esc(e.net.explorer + e.payTx) + '" target="_blank" rel="noopener noreferrer">Inspect on BaseScan</a> (opens an external site)</div>';
-      }
+      if (isTxHash(e.payTx) && e.net && e.net.explorer) link = baseScanCap(e.net.explorer + e.payTx);
       rows += dlRow('Settlement transaction', monoVal(e.payTx) + link);
     }
     rows += dlRow('Source', e.pay ? 'Audit Event v1.0 payment object' : 'Service payment table (chain_payments)');
