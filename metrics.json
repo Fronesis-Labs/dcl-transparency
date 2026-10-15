@@ -1,8 +1,26 @@
 {
-  "generated_at": "2026-10-15T04:15:01+00:00",
-  "total_audits": 162,
-  "total_usdc_protected": 2.26,
+  "generated_at": "2026-10-15T04:30:02+00:00",
+  "total_audits": 164,
+  "total_usdc_protected": 2.28,
   "recent_events": [
+    {
+      "service": "webhook",
+      "timestamp": "2026-10-15 04:23:13",
+      "agent_id": "fronesis",
+      "task_type": "post",
+      "verdict": "COMMIT",
+      "route": "/evaluate/jailbreak",
+      "amount_usdc": 0.02
+    },
+    {
+      "service": "bazaar",
+      "timestamp": "2026-10-15 04:18:49",
+      "agent_id": "agent-123",
+      "task_type": "safety",
+      "verdict": "NO_COMMIT",
+      "route": "/evaluate/safety",
+      "amount_usdc": 0.01
+    },
     {
       "service": "webhook",
       "timestamp": "2026-10-15 04:11:37",
@@ -119,41 +137,32 @@
       "verdict": "COMMIT",
       "route": "/evaluate/jailbreak",
       "amount_usdc": 0.02
-    },
-    {
-      "service": "webhook",
-      "timestamp": "2026-10-12 14:32:30",
-      "agent_id": "fronesis",
-      "task_type": "post",
-      "verdict": "COMMIT",
-      "route": "/evaluate/jailbreak",
-      "amount_usdc": 0.02
-    },
-    {
-      "service": "webhook",
-      "timestamp": "2026-10-12 10:29:58",
-      "agent_id": "fronesis",
-      "task_type": "post",
-      "verdict": "COMMIT",
-      "route": "/evaluate/jailbreak",
-      "amount_usdc": 0.02
     }
   ],
   "services": {
     "webhook": {
       "available": true,
-      "total_audits": 82,
-      "commit_count": 76,
+      "total_audits": 83,
+      "commit_count": 77,
       "no_commit_count": 6,
       "unique_agents": 10,
-      "usdc_protected": 1.33,
+      "usdc_protected": 1.35,
       "network_distribution": [
         {
           "network": "base",
-          "count": 70
+          "count": 71
         }
       ],
       "recent_events": [
+        {
+          "service": "webhook",
+          "timestamp": "2026-10-15 04:23:13",
+          "agent_id": "fronesis",
+          "task_type": "post",
+          "verdict": "COMMIT",
+          "route": "/evaluate/jailbreak",
+          "amount_usdc": 0.02
+        },
         {
           "service": "webhook",
           "timestamp": "2026-10-15 04:11:37",
@@ -279,32 +288,32 @@
           "verdict": "COMMIT",
           "route": "/evaluate/jailbreak",
           "amount_usdc": 0.02
-        },
-        {
-          "service": "webhook",
-          "timestamp": "2026-10-12 10:29:58",
-          "agent_id": "fronesis",
-          "task_type": "post",
-          "verdict": "COMMIT",
-          "route": "/evaluate/jailbreak",
-          "amount_usdc": 0.02
         }
       ]
     },
     "bazaar": {
       "available": true,
-      "total_audits": 80,
+      "total_audits": 81,
       "commit_count": 68,
-      "no_commit_count": 12,
+      "no_commit_count": 13,
       "unique_agents": 8,
       "usdc_protected": 0.93,
       "network_distribution": [
         {
           "network": "eip155:8453",
-          "count": 46
+          "count": 47
         }
       ],
       "recent_events": [
+        {
+          "service": "bazaar",
+          "timestamp": "2026-10-15 04:18:49",
+          "agent_id": "agent-123",
+          "task_type": "safety",
+          "verdict": "NO_COMMIT",
+          "route": "/evaluate/safety",
+          "amount_usdc": 0.01
+        },
         {
           "service": "bazaar",
           "timestamp": "2026-10-11 17:01:37",
@@ -429,15 +438,6 @@
           "task_type": "unknown",
           "verdict": "COMMIT",
           "route": "/evaluate/secrets",
-          "amount_usdc": 0.02
-        },
-        {
-          "service": "bazaar",
-          "timestamp": "2026-10-01 01:42:27",
-          "agent_id": "bazaar-discovery-reindex",
-          "task_type": "jailbreak",
-          "verdict": "COMMIT",
-          "route": "/evaluate/jailbreak",
           "amount_usdc": 0.02
         }
       ]
