@@ -1,8 +1,29 @@
 {
-  "generated_at": "2026-10-16T03:45:01+00:00",
-  "total_audits": 168,
-  "total_usdc_protected": 2.36,
+  "generated_at": "2026-10-16T04:00:02+00:00",
+  "total_audits": 169,
+  "total_usdc_protected": 2.38,
   "recent_events": [
+    {
+      "service": "webhook",
+      "timestamp": "2026-10-16 03:48:12",
+      "agent_id": "fronesis",
+      "task_type": "post",
+      "verdict": "COMMIT",
+      "route": "/evaluate/jailbreak",
+      "amount_usdc": 0.02,
+      "record_kind": "legacy_chain_row",
+      "audit_hash": "0xce41ba56039428cb114dc39d59ba346bd0ca3e76f539ccb05cf2700ad48e5db2",
+      "payment": {
+        "source": "chain_payments",
+        "status": "recorded",
+        "payment_rows": 1,
+        "amount_usdc": 0.02,
+        "network": "base",
+        "tx_hash": null,
+        "tx_hash_status": "unavailable"
+      },
+      "canonical_link": "none"
+    },
     {
       "service": "webhook",
       "timestamp": "2026-10-16 00:27:10",
@@ -3623,15 +3644,15 @@
   "services": {
     "webhook": {
       "available": true,
-      "total_audits": 87,
-      "commit_count": 81,
+      "total_audits": 88,
+      "commit_count": 82,
       "no_commit_count": 6,
       "unique_agents": 10,
-      "usdc_protected": 1.43,
+      "usdc_protected": 1.45,
       "network_distribution": [
         {
           "network": "base",
-          "count": 75
+          "count": 76
         }
       ],
       "row_integrity": {
@@ -3641,6 +3662,27 @@
         "payment_rows_sharing_tx_hash": 0
       },
       "recent_events": [
+        {
+          "service": "webhook",
+          "timestamp": "2026-10-16 03:48:12",
+          "agent_id": "fronesis",
+          "task_type": "post",
+          "verdict": "COMMIT",
+          "route": "/evaluate/jailbreak",
+          "amount_usdc": 0.02,
+          "record_kind": "legacy_chain_row",
+          "audit_hash": "0xce41ba56039428cb114dc39d59ba346bd0ca3e76f539ccb05cf2700ad48e5db2",
+          "payment": {
+            "source": "chain_payments",
+            "status": "recorded",
+            "payment_rows": 1,
+            "amount_usdc": 0.02,
+            "network": "base",
+            "tx_hash": null,
+            "tx_hash_status": "unavailable"
+          },
+          "canonical_link": "none"
+        },
         {
           "service": "webhook",
           "timestamp": "2026-10-16 00:27:10",
