@@ -1,8 +1,21 @@
 {
-  "generated_at": "2026-10-18T16:15:01+00:00",
-  "total_audits": 181,
+  "generated_at": "2026-10-18T16:30:01+00:00",
+  "total_audits": 182,
   "total_usdc_protected": 2.6,
   "recent_events": [
+    {
+      "service": "webhook",
+      "timestamp": "2026-10-18 16:16:25",
+      "agent_id": "ai-cloud-studio",
+      "task_type": "fast",
+      "verdict": "COMMIT",
+      "route": null,
+      "amount_usdc": null,
+      "record_kind": "legacy_chain_row",
+      "audit_hash": "0x471438eba534c486e0afa5abe40bdb8ec5b8c7da2f5ce395e6879af22adb4eff",
+      "payment": null,
+      "canonical_link": "none"
+    },
     {
       "service": "webhook",
       "timestamp": "2026-10-17 21:44:01",
@@ -3896,10 +3909,10 @@
   "services": {
     "webhook": {
       "available": true,
-      "total_audits": 100,
-      "commit_count": 93,
+      "total_audits": 101,
+      "commit_count": 94,
       "no_commit_count": 7,
-      "unique_agents": 10,
+      "unique_agents": 11,
       "usdc_protected": 1.67,
       "network_distribution": [
         {
@@ -3908,12 +3921,25 @@
         }
       ],
       "row_integrity": {
-        "chain_rows_without_payment": 12,
+        "chain_rows_without_payment": 13,
         "payment_rows_without_chain": 0,
         "chain_rows_sharing_tx_hash": 0,
         "payment_rows_sharing_tx_hash": 0
       },
       "recent_events": [
+        {
+          "service": "webhook",
+          "timestamp": "2026-10-18 16:16:25",
+          "agent_id": "ai-cloud-studio",
+          "task_type": "fast",
+          "verdict": "COMMIT",
+          "route": null,
+          "amount_usdc": null,
+          "record_kind": "legacy_chain_row",
+          "audit_hash": "0x471438eba534c486e0afa5abe40bdb8ec5b8c7da2f5ce395e6879af22adb4eff",
+          "payment": null,
+          "canonical_link": "none"
+        },
         {
           "service": "webhook",
           "timestamp": "2026-10-17 21:44:01",
