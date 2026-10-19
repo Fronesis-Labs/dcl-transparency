@@ -1,8 +1,29 @@
 {
-  "generated_at": "2026-10-19T13:00:02+00:00",
-  "total_audits": 183,
-  "total_usdc_protected": 2.6,
+  "generated_at": "2026-10-19T13:15:02+00:00",
+  "total_audits": 184,
+  "total_usdc_protected": 2.61,
   "recent_events": [
+    {
+      "service": "bazaar",
+      "timestamp": "2026-10-19 13:10:02",
+      "agent_id": "agent-123",
+      "task_type": "http_side_effect",
+      "verdict": "COMMIT",
+      "route": "/evaluate/fast",
+      "amount_usdc": 0.01,
+      "record_kind": "legacy_chain_row",
+      "audit_hash": "0xbcc0e0fe45aa6b208476c1e0dfb193f15bfea461cfd972981b44baf10df889ab",
+      "payment": {
+        "source": "chain_payments",
+        "status": "recorded",
+        "payment_rows": 1,
+        "amount_usdc": 0.01,
+        "network": "eip155:8453",
+        "tx_hash": null,
+        "tx_hash_status": "unavailable"
+      },
+      "canonical_link": "none"
+    },
     {
       "service": "bazaar",
       "timestamp": "2026-10-19 12:44:33",
@@ -5975,15 +5996,15 @@
     },
     "bazaar": {
       "available": true,
-      "total_audits": 82,
-      "commit_count": 68,
+      "total_audits": 83,
+      "commit_count": 69,
       "no_commit_count": 14,
       "unique_agents": 8,
-      "usdc_protected": 0.93,
+      "usdc_protected": 0.94,
       "network_distribution": [
         {
           "network": "eip155:8453",
-          "count": 48
+          "count": 49
         }
       ],
       "row_integrity": {
@@ -5993,6 +6014,27 @@
         "payment_rows_sharing_tx_hash": 0
       },
       "recent_events": [
+        {
+          "service": "bazaar",
+          "timestamp": "2026-10-19 13:10:02",
+          "agent_id": "agent-123",
+          "task_type": "http_side_effect",
+          "verdict": "COMMIT",
+          "route": "/evaluate/fast",
+          "amount_usdc": 0.01,
+          "record_kind": "legacy_chain_row",
+          "audit_hash": "0xbcc0e0fe45aa6b208476c1e0dfb193f15bfea461cfd972981b44baf10df889ab",
+          "payment": {
+            "source": "chain_payments",
+            "status": "recorded",
+            "payment_rows": 1,
+            "amount_usdc": 0.01,
+            "network": "eip155:8453",
+            "tx_hash": null,
+            "tx_hash_status": "unavailable"
+          },
+          "canonical_link": "none"
+        },
         {
           "service": "bazaar",
           "timestamp": "2026-10-19 12:44:33",
