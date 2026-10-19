@@ -1,8 +1,29 @@
 {
-  "generated_at": "2026-10-19T12:30:02+00:00",
-  "total_audits": 182,
+  "generated_at": "2026-10-19T12:45:02+00:00",
+  "total_audits": 183,
   "total_usdc_protected": 2.6,
   "recent_events": [
+    {
+      "service": "bazaar",
+      "timestamp": "2026-10-19 12:44:33",
+      "agent_id": "agent-123",
+      "task_type": "safety",
+      "verdict": "NO_COMMIT",
+      "route": "/evaluate/safety",
+      "amount_usdc": 0.01,
+      "record_kind": "legacy_chain_row",
+      "audit_hash": "0xa95ebd28b7f587f86d191c764194dd0cf50a2827332a1b330b6964bab5d661ee",
+      "payment": {
+        "source": "chain_payments",
+        "status": "recorded",
+        "payment_rows": 1,
+        "amount_usdc": 0.01,
+        "network": "eip155:8453",
+        "tx_hash": null,
+        "tx_hash_status": "unavailable"
+      },
+      "canonical_link": "none"
+    },
     {
       "service": "webhook",
       "timestamp": "2026-10-18 16:16:25",
@@ -5954,15 +5975,15 @@
     },
     "bazaar": {
       "available": true,
-      "total_audits": 81,
+      "total_audits": 82,
       "commit_count": 68,
-      "no_commit_count": 13,
+      "no_commit_count": 14,
       "unique_agents": 8,
       "usdc_protected": 0.93,
       "network_distribution": [
         {
           "network": "eip155:8453",
-          "count": 47
+          "count": 48
         }
       ],
       "row_integrity": {
@@ -5972,6 +5993,27 @@
         "payment_rows_sharing_tx_hash": 0
       },
       "recent_events": [
+        {
+          "service": "bazaar",
+          "timestamp": "2026-10-19 12:44:33",
+          "agent_id": "agent-123",
+          "task_type": "safety",
+          "verdict": "NO_COMMIT",
+          "route": "/evaluate/safety",
+          "amount_usdc": 0.01,
+          "record_kind": "legacy_chain_row",
+          "audit_hash": "0xa95ebd28b7f587f86d191c764194dd0cf50a2827332a1b330b6964bab5d661ee",
+          "payment": {
+            "source": "chain_payments",
+            "status": "recorded",
+            "payment_rows": 1,
+            "amount_usdc": 0.01,
+            "network": "eip155:8453",
+            "tx_hash": null,
+            "tx_hash_status": "unavailable"
+          },
+          "canonical_link": "none"
+        },
         {
           "service": "bazaar",
           "timestamp": "2026-10-15 04:18:49",
