@@ -1,8 +1,29 @@
 {
-  "generated_at": "2026-10-21T09:30:01+00:00",
+  "generated_at": "2026-10-21T09:45:01+00:00",
   "total_audits": 186,
-  "total_usdc_protected": 2.62,
+  "total_usdc_protected": 3.12,
   "recent_events": [
+    {
+      "service": "bazaar",
+      "timestamp": "2026-10-21 09:41:33",
+      "agent_id": "bazaar-payment-probe",
+      "task_type": "quality",
+      "verdict": "COMMIT",
+      "route": "/audit/:tx_hash/deep",
+      "amount_usdc": 0.5,
+      "record_kind": "legacy_chain_row",
+      "audit_hash": "0xf5594fc42723092b503a176f6780625bbb0eb848dfb41972f32103517d3d8061",
+      "payment": {
+        "source": "chain_payments",
+        "status": "recorded",
+        "payment_rows": 1,
+        "amount_usdc": 0.5,
+        "network": "eip155:8453",
+        "tx_hash": null,
+        "tx_hash_status": "unavailable"
+      },
+      "canonical_link": "none"
+    },
     {
       "service": "bazaar",
       "timestamp": "2026-10-21 07:03:05",
@@ -2963,19 +2984,6 @@
         "tx_hash": null,
         "tx_hash_status": "unavailable"
       },
-      "canonical_link": "none"
-    },
-    {
-      "service": "bazaar",
-      "timestamp": "2026-09-07 12:34:25",
-      "agent_id": "bazaar-payment-probe",
-      "task_type": "quality",
-      "verdict": "COMMIT",
-      "route": null,
-      "amount_usdc": null,
-      "record_kind": "legacy_chain_row",
-      "audit_hash": "0xf5594fc42723092b503a176f6780625bbb0eb848dfb41972f32103517d3d8061",
-      "payment": null,
       "canonical_link": "none"
     },
     {
@@ -6042,15 +6050,15 @@
       "commit_count": 70,
       "no_commit_count": 15,
       "unique_agents": 8,
-      "usdc_protected": 0.95,
+      "usdc_protected": 1.45,
       "network_distribution": [
         {
           "network": "eip155:8453",
-          "count": 51
+          "count": 52
         }
       ],
       "row_integrity": {
-        "chain_rows_without_payment": 34,
+        "chain_rows_without_payment": 33,
         "payment_rows_without_chain": 0,
         "chain_rows_sharing_tx_hash": 0,
         "payment_rows_sharing_tx_hash": 0
@@ -7153,15 +7161,23 @@
         },
         {
           "service": "bazaar",
-          "timestamp": "2026-09-07 12:34:25",
+          "timestamp": "2026-10-21 09:41:33",
           "agent_id": "bazaar-payment-probe",
           "task_type": "quality",
           "verdict": "COMMIT",
-          "route": null,
-          "amount_usdc": null,
+          "route": "/audit/:tx_hash/deep",
+          "amount_usdc": 0.5,
           "record_kind": "legacy_chain_row",
           "audit_hash": "0xf5594fc42723092b503a176f6780625bbb0eb848dfb41972f32103517d3d8061",
-          "payment": null,
+          "payment": {
+            "source": "chain_payments",
+            "status": "recorded",
+            "payment_rows": 1,
+            "amount_usdc": 0.5,
+            "network": "eip155:8453",
+            "tx_hash": null,
+            "tx_hash_status": "unavailable"
+          },
           "canonical_link": "none"
         },
         {
