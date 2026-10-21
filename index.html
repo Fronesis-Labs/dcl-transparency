@@ -780,7 +780,7 @@
     return '<span class="muted">No payment data</span>';
   }
   function sourceLabel(e) {
-    var base = e.source === 'both' ? 'Audit Event v1.0 + legacy record' : (e.source === 'v1' ? 'Audit Event v1.0' : 'Legacy record');
+    var base = e.source === 'both' ? 'Audit Event v1.0 + record' : (e.source === 'v1' ? 'Audit Event v1.0' : 'Record');
     return e.source === 'both' && e.link === 'heuristic' ? base + ' (heuristic match)' : base;
   }
 
