@@ -1,8 +1,50 @@
 {
-  "generated_at": "2026-10-21T07:00:02+00:00",
-  "total_audits": 184,
-  "total_usdc_protected": 2.61,
+  "generated_at": "2026-10-21T07:15:02+00:00",
+  "total_audits": 186,
+  "total_usdc_protected": 2.62,
   "recent_events": [
+    {
+      "service": "bazaar",
+      "timestamp": "2026-10-21 07:03:05",
+      "agent_id": "agent-123",
+      "task_type": "http_side_effect",
+      "verdict": "COMMIT",
+      "route": "/evaluate/fast",
+      "amount_usdc": 0.01,
+      "record_kind": "legacy_chain_row",
+      "audit_hash": "0x451f12d861f560a6ce00a669adb4531983546765df72af0e387375adbe3d764c",
+      "payment": {
+        "source": "chain_payments",
+        "status": "recorded",
+        "payment_rows": 1,
+        "amount_usdc": 0.01,
+        "network": "eip155:8453",
+        "tx_hash": null,
+        "tx_hash_status": "unavailable"
+      },
+      "canonical_link": "none"
+    },
+    {
+      "service": "bazaar",
+      "timestamp": "2026-10-21 07:02:13",
+      "agent_id": "agent-123",
+      "task_type": "safety",
+      "verdict": "NO_COMMIT",
+      "route": "/evaluate/safety",
+      "amount_usdc": 0.01,
+      "record_kind": "legacy_chain_row",
+      "audit_hash": "0xbd0ac9c2702da2551f193040a959ed9cb687a985bf54b8e562c3c277946696f6",
+      "payment": {
+        "source": "chain_payments",
+        "status": "recorded",
+        "payment_rows": 1,
+        "amount_usdc": 0.01,
+        "network": "eip155:8453",
+        "tx_hash": null,
+        "tx_hash_status": "unavailable"
+      },
+      "canonical_link": "none"
+    },
     {
       "service": "bazaar",
       "timestamp": "2026-10-19 13:10:02",
@@ -5996,15 +6038,15 @@
     },
     "bazaar": {
       "available": true,
-      "total_audits": 83,
-      "commit_count": 69,
-      "no_commit_count": 14,
+      "total_audits": 85,
+      "commit_count": 70,
+      "no_commit_count": 15,
       "unique_agents": 8,
-      "usdc_protected": 0.94,
+      "usdc_protected": 0.95,
       "network_distribution": [
         {
           "network": "eip155:8453",
-          "count": 49
+          "count": 51
         }
       ],
       "row_integrity": {
@@ -6014,6 +6056,48 @@
         "payment_rows_sharing_tx_hash": 0
       },
       "recent_events": [
+        {
+          "service": "bazaar",
+          "timestamp": "2026-10-21 07:03:05",
+          "agent_id": "agent-123",
+          "task_type": "http_side_effect",
+          "verdict": "COMMIT",
+          "route": "/evaluate/fast",
+          "amount_usdc": 0.01,
+          "record_kind": "legacy_chain_row",
+          "audit_hash": "0x451f12d861f560a6ce00a669adb4531983546765df72af0e387375adbe3d764c",
+          "payment": {
+            "source": "chain_payments",
+            "status": "recorded",
+            "payment_rows": 1,
+            "amount_usdc": 0.01,
+            "network": "eip155:8453",
+            "tx_hash": null,
+            "tx_hash_status": "unavailable"
+          },
+          "canonical_link": "none"
+        },
+        {
+          "service": "bazaar",
+          "timestamp": "2026-10-21 07:02:13",
+          "agent_id": "agent-123",
+          "task_type": "safety",
+          "verdict": "NO_COMMIT",
+          "route": "/evaluate/safety",
+          "amount_usdc": 0.01,
+          "record_kind": "legacy_chain_row",
+          "audit_hash": "0xbd0ac9c2702da2551f193040a959ed9cb687a985bf54b8e562c3c277946696f6",
+          "payment": {
+            "source": "chain_payments",
+            "status": "recorded",
+            "payment_rows": 1,
+            "amount_usdc": 0.01,
+            "network": "eip155:8453",
+            "tx_hash": null,
+            "tx_hash_status": "unavailable"
+          },
+          "canonical_link": "none"
+        },
         {
           "service": "bazaar",
           "timestamp": "2026-10-19 13:10:02",
